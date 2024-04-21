@@ -19,4 +19,6 @@ class TImages {
   static const String deliveryEmail = "assets/images/animations/send_email.png";
   static const String receiveEmail = "assets/images/animations/receive_email.png";
 
+  static const String user = "assets/images/users/user.png";
+
 }

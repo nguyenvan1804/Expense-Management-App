@@ -19,6 +19,7 @@ dependencies:
   url_launcher: ^6.1.12
   flutter_native_splash: ^2.4.0
   smooth_page_indicator: ^1.1.0
+  persistent_bottom_nav_bar: ^5.0.2
 
   #State management:
   get: ^4.6.5
@@ -44,6 +45,7 @@ flutter:
   #  LOCAL ASSETS
   assets:
     - assets/icons/brands/
+    - assets/images/
     - assets/images/on_boarding_images/
     - assets/images/animations/
     - assets/images/users/

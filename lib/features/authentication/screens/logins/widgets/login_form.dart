@@ -5,6 +5,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:login_signup_project/features/authentication/screens/password_configuration/forgot_password.dart';
 import 'package:login_signup_project/features/personalization/screens/settings/settings.dart';
+import 'package:login_signup_project/screens_home/home_screen.dart';
 import '../../../../../utils/constants/colors.dart';
 import '../../../../../utils/constants/sizes.dart';
 import '../../../../../utils/constants/text_strings.dart';
@@ -71,7 +72,7 @@ class TLoginForm extends StatelessWidget {
             SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () => Get.to(() => const SettingsScreen()),
+                  onPressed: () => Get.to(() => const HomeScreen()),
                   style: ElevatedButton.styleFrom(
                       side: const BorderSide(color: Colors.deepPurple),
                       backgroundColor:

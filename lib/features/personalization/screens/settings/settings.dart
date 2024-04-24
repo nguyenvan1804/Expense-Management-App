@@ -29,7 +29,7 @@ class SettingsScreen extends StatelessWidget {
                   TAppBar(title: Text('Account', style: Theme.of(context).textTheme.headlineMedium!.apply(color: TColors.white))),
 
                   /// User Profile Card
-                  TUserProfileTile(onPressed: () => Get.to(() => const ProfileScreen()),),
+                  TUserProfileTile(onPressed: () => Get.to(() => const ProfileScreen())),
                   const SizedBox(height: TSizes.spaceBtwSections),
                 ]
               ),

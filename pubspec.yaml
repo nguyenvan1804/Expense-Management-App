@@ -28,6 +28,7 @@ dependencies:
   #Icons
   iconsax: ^0.0.8
   cupertino_icons: ^1.0.6
+  flutter_slidable: ^3.0.0
 
 dev_dependencies:
   flutter_test:
@@ -45,6 +46,7 @@ flutter:
   #  LOCAL ASSETS
   assets:
     - assets/icons/brands/
+    - assets/icons/transaction/
     - assets/images/
     - assets/images/on_boarding_images/
     - assets/images/animations/

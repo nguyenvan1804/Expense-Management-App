@@ -1,4 +1,5 @@
 import 'package:login_signup_project/Widget/bottom_sheet.dart';
+import 'home_screen.dart';
 import 'package:login_signup_project/utils/constants/color_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,30 +13,80 @@ class AddInconme extends StatefulWidget {
 }
 
 class _AddInconmeState extends State<AddInconme> {
+  String selectedItem = 'Income';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: const IconThemeData(color: Colors.white),
-        backgroundColor: Colors.green,
-        title: const Center(
-          child: Text(
-            'Income',
-            style: TextStyle(color: Colors.white),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            // Navigator.pop(context);
+          },
+        ),
+        backgroundColor: selectedItem == 'Income'
+            ? Color.fromARGB(255, 10, 135, 15)
+            : Color.fromARGB(255, 155, 10, 10),
+        title: Center(
+          child: DropdownButtonFormField<String>(
+            dropdownColor: Color.fromARGB(255, 98, 98, 98),
+            value: 'Income',
+            decoration: InputDecoration(
+              isDense: true,
+              contentPadding: EdgeInsets.all(35),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide.none,
+              ),
+              border: OutlineInputBorder(
+                borderSide: BorderSide.none,
+              ),
+              filled: true,
+              fillColor: selectedItem == 'Income'
+                  ? Color.fromARGB(255, 10, 135, 15)
+                  : Color.fromARGB(255, 155, 10, 10),
+            ),
+            icon: Icon(
+              Icons.arrow_drop_down,
+              color: Colors.white,
+            ),
+            items: [
+              DropdownMenuItem(
+                value: 'Income',
+                child: Text(
+                  'Income',
+                  style: TextStyle(color: Colors.white, fontSize: 16),
+                ),
+              ),
+              DropdownMenuItem(
+                value: 'Expenses',
+                child: Text(
+                  'Expenses',
+                  style: TextStyle(color: Colors.white, fontSize: 16),
+                ),
+              ),
+            ],
+            onChanged: (value) {
+              setState(() {
+                selectedItem = value!;
+              });
+            },
+            onSaved: (value) {},
           ),
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () {},
+          Container(
+            width: 60,
           ),
         ],
       ),
       body: Column(
         children: [
           Container(
-            decoration: const BoxDecoration(
-              color: Colors.green,
+            decoration: BoxDecoration(
+              color: selectedItem == 'Income'
+                  ? Color.fromARGB(255, 10, 135, 15)
+                  : Color.fromARGB(255, 155, 10, 10),
             ),
             child: Column(
               children: [
@@ -57,25 +108,30 @@ class _AddInconmeState extends State<AddInconme> {
                     ],
                   ),
                 ),
-                Container(
-                  // height: 500,
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    //top border radius
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(20),
-                      topRight: Radius.circular(20),
-                    ),
-                  ),
-                  child: Column(
-                    // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          showModalBottomSheet<void>(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return Container(
+              ],
+            ),
+          ),
+          Expanded(
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(50.0),
+                  topRight: Radius.circular(50.0),
+                ),
+              ),
+              child: SingleChildScrollView(
+                child: Column(
+                  // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        showModalBottomSheet<void>(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return SingleChildScrollView(
+                              child: Container(
                                 decoration: const BoxDecoration(
                                   //top border radius
                                   borderRadius: BorderRadius.only(
@@ -83,7 +139,7 @@ class _AddInconmeState extends State<AddInconme> {
                                     topRight: Radius.circular(20),
                                   ),
                                 ),
-                                height: 800,
+                                // height: 800,
                                 // color: Colors.white,
                                 child: Center(
                                   child: Column(
@@ -105,14 +161,14 @@ class _AddInconmeState extends State<AddInconme> {
                                       ),
                                       Row(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
+                                        MainAxisAlignment.spaceEvenly,
                                         children: [
                                           ElevatedButton(
                                               onPressed: () {},
                                               style: ButtonStyle(
                                                 backgroundColor:
-                                                    MaterialStateProperty.all(
-                                                        Colors.purple[50]),
+                                                MaterialStateProperty.all(
+                                                    Colors.purple[50]),
                                               ),
                                               child: const Padding(
                                                 padding: EdgeInsets.only(
@@ -132,7 +188,7 @@ class _AddInconmeState extends State<AddInconme> {
                                       const SizedBox(height: 20),
                                       Row(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                        MainAxisAlignment.spaceBetween,
                                         children: [
                                           Row(
                                             children: [
@@ -140,14 +196,14 @@ class _AddInconmeState extends State<AddInconme> {
                                                 margin: const EdgeInsets.only(
                                                     left: 40),
                                                 padding:
-                                                    const EdgeInsets.all(10),
+                                                const EdgeInsets.all(10),
                                                 decoration: ShapeDecoration(
                                                   color:
-                                                      const Color(0xFFFCEED3),
+                                                  const Color(0xFFFCEED3),
                                                   shape: RoundedRectangleBorder(
                                                     borderRadius:
-                                                        BorderRadius.circular(
-                                                            14),
+                                                    BorderRadius.circular(
+                                                        14),
                                                   ),
                                                 ),
                                                 child: const Icon(
@@ -165,7 +221,7 @@ class _AddInconmeState extends State<AddInconme> {
                                                           .mainBlackColor,
                                                       fontSize: 16,
                                                       fontWeight:
-                                                          FontWeight.w500)),
+                                                      FontWeight.w500)),
                                             ],
                                           ),
                                           IconButton(
@@ -179,23 +235,23 @@ class _AddInconmeState extends State<AddInconme> {
                                       ),
                                       Row(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                        MainAxisAlignment.spaceBetween,
                                         children: [
                                           Row(
                                             mainAxisAlignment:
-                                                MainAxisAlignment.start,
+                                            MainAxisAlignment.start,
                                             children: [
                                               Container(
                                                 margin: const EdgeInsets.only(
                                                     left: 40),
                                                 padding:
-                                                    const EdgeInsets.all(10),
+                                                const EdgeInsets.all(10),
                                                 decoration: ShapeDecoration(
                                                   color: Colors.red[50],
                                                   shape: RoundedRectangleBorder(
                                                     borderRadius:
-                                                        BorderRadius.circular(
-                                                            14),
+                                                    BorderRadius.circular(
+                                                        14),
                                                   ),
                                                 ),
                                                 child: const Icon(
@@ -212,7 +268,7 @@ class _AddInconmeState extends State<AddInconme> {
                                                           .mainBlackColor,
                                                       fontSize: 16,
                                                       fontWeight:
-                                                          FontWeight.w500)),
+                                                      FontWeight.w500)),
                                             ],
                                           ),
                                           IconButton(
@@ -226,23 +282,23 @@ class _AddInconmeState extends State<AddInconme> {
                                       ),
                                       Row(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                        MainAxisAlignment.spaceBetween,
                                         children: [
                                           Row(
                                             mainAxisAlignment:
-                                                MainAxisAlignment.start,
+                                            MainAxisAlignment.start,
                                             children: [
                                               Container(
                                                 margin: const EdgeInsets.only(
                                                     left: 40),
                                                 padding:
-                                                    const EdgeInsets.all(10),
+                                                const EdgeInsets.all(10),
                                                 decoration: ShapeDecoration(
                                                   color: Colors.blue[50],
                                                   shape: RoundedRectangleBorder(
                                                     borderRadius:
-                                                        BorderRadius.circular(
-                                                            14),
+                                                    BorderRadius.circular(
+                                                        14),
                                                   ),
                                                 ),
                                                 child: const Icon(
@@ -259,7 +315,7 @@ class _AddInconmeState extends State<AddInconme> {
                                                           .mainBlackColor,
                                                       fontSize: 16,
                                                       fontWeight:
-                                                          FontWeight.w500)),
+                                                      FontWeight.w500)),
                                             ],
                                           ),
                                           IconButton(
@@ -272,58 +328,37 @@ class _AddInconmeState extends State<AddInconme> {
                                         height: 20,
                                       ),
                                       ElevatedButton(
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          //
+                                        },
                                         style: ButtonStyle(
-                                          backgroundColor:
-                                              MaterialStateProperty.all(
-                                                  Colors.blueAccent),
                                           padding: MaterialStateProperty.all(
                                             const EdgeInsets.symmetric(
-                                                horizontal: 60, vertical: 10),
+                                                horizontal: 100, vertical: 10),
                                           ),
                                         ),
                                         child: const Padding(
                                             padding: EdgeInsets.only(
-                                                left: 60, right: 60),
+                                                left: 0, right: 0),
                                             child: Text(
                                               "Add Category",
                                               style: TextStyle(
                                                   color: Colors.white),
+                                              textAlign: TextAlign.center,
                                             )),
                                       ),
+                                      SizedBox(
+                                        height: 35,
+                                      )
                                     ],
                                   ),
                                 ),
-                              );
-                            },
-                          );
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.all(20),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(color: Colors.grey.shade200),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 10, right: 10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "Category",
-                                  style: TextStyle(color: AppColors.textColor),
-                                ),
-                                // const Spacer(),
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: const Icon(Icons.keyboard_arrow_down),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(
+                              ),
+                            );
+                          },
+                        );
+                      },
+                      child: Container(
                         margin: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
@@ -335,10 +370,9 @@ class _AddInconmeState extends State<AddInconme> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                "Description",
+                                "Category",
                                 style: TextStyle(color: AppColors.textColor),
                               ),
-                              // const Spacer(),
                               IconButton(
                                 onPressed: () {},
                                 icon: const Icon(Icons.keyboard_arrow_down),
@@ -347,76 +381,110 @@ class _AddInconmeState extends State<AddInconme> {
                           ),
                         ),
                       ),
-                      Container(
-                        margin: const EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: Colors.grey.shade200),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 10, right: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "Tuesday, 12 May 2021",
-                                style: TextStyle(color: AppColors.textColor),
-                              ),
-                              // const Spacer(),
-                              IconButton(
-                                onPressed: () {},
-                                icon: const Icon(Icons.keyboard_arrow_down),
-                              ),
-                            ],
-                          ),
-                        ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                            color: Color.fromARGB(255, 249, 245, 245)),
                       ),
-                      const SizedBox(
-                        height: 50,
-                      ),
-                      Container(
-                        width: 200,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 0, right: 0),
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            IconButton(
-                              onPressed: () {},
-                              icon: const Icon(Icons.attach_file_sharp),
-                            ),
-                            Text(
-                              "Add attachment",
-                              style: TextStyle(color: AppColors.textColor),
+                            Expanded(
+                              child: TextField(
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: 'Description',
+                                  hintStyle:
+                                  TextStyle(color: AppColors.textColor),
+                                ),
+                                style: TextStyle(
+                                  color: Colors.black,
+                                ),
+                                // Add any additional TextField properties as needed
+                              ),
                             ),
                           ],
                         ),
                       ),
-                      const SizedBox(height: 50),
-                      ElevatedButton(
-                        onPressed: () {},
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(Colors.blueAccent),
-                          padding: MaterialStateProperty.all(
-                            const EdgeInsets.symmetric(
-                                horizontal: 60, vertical: 10),
-                          ),
-                        ),
-                        child: const Padding(
-                            padding: EdgeInsets.only(left: 60, right: 60),
-                            child: Text(
-                              "Continue",
-                              style: TextStyle(color: Colors.white),
-                            )),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: Colors.grey.shade200),
                       ),
-                      // const SizedBox(height: 60),
-                    ],
-                  ),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 10, right: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Tuesday, 12 May 2021",
+                              style: TextStyle(color: AppColors.textColor),
+                            ),
+                            // const Spacer(),
+                            IconButton(
+                              onPressed: () {},
+                              icon: const Icon(Icons.keyboard_arrow_down),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 50,
+                    ),
+                    Container(
+                      width: 200,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Row(
+                        children: [
+                          IconButton(
+                            onPressed: () {},
+                            icon: const Icon(Icons.attach_file_sharp),
+                          ),
+                          Text(
+                            "Add attachment",
+                            style: TextStyle(color: AppColors.textColor),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 50),
+                    ElevatedButton(
+                      onPressed: () {},
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(
+                          selectedItem == 'Income'
+                              ? Color.fromARGB(255, 10, 135, 15)
+                              : Color.fromARGB(255, 155, 10, 10),
+                        ),
+                        padding: MaterialStateProperty.all(
+                          const EdgeInsets.symmetric(
+                              horizontal: 60, vertical: 10),
+                        ),
+                      ),
+                      child: const Padding(
+                          padding: EdgeInsets.only(left: 60, right: 60),
+                          child: Text(
+                            "Save",
+                            style: TextStyle(color: Colors.white),
+                          )),
+                    ),
+                    const SizedBox(height: 50),
+                  ],
                 ),
-              ],
+              ),
             ),
+            // ),
           ),
         ],
       ),

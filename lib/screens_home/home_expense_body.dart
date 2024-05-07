@@ -42,7 +42,8 @@ class HomeBody extends StatelessWidget {
                 ),
                 //bell icon
                 IconButton(
-                  icon: Icon(CupertinoIcons.bell_fill, color: AppColors.violetColor),
+                  icon: Icon(CupertinoIcons.bell_fill,
+                      color: AppColors.violetColor),
                   onPressed: () => Get.to(() => const NotificationScreen()),
                 ),
               ],
@@ -147,8 +148,7 @@ class HomeBody extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
-                      margin:
-                      const EdgeInsets.only(top: 25),
+                      margin: const EdgeInsets.only(top: 25),
                       child: const Text(
                         'Spend Frequency',
                         textAlign: TextAlign.left,
@@ -165,9 +165,8 @@ class HomeBody extends StatelessWidget {
                       height: 20,
                     ),
                     //image chart
-                    Container(
-                      child: Image.asset('assets/images/chart.png'),
-                    ),
+                    Image.asset('assets/images/chart.png',
+                        height: 200, width: double.maxFinite),
 
                     const SizedBox(
                       height: 10,
@@ -342,14 +341,14 @@ class HomeBody extends StatelessWidget {
                               ),
                             )
 
-                          // Container(
-                          //   decoration: BoxDecoration(
-                          //       color: Colors.purpleAccent.withOpacity(0.3),
-                          //       borderRadius: BorderRadius.circular(20)),
-                          //   child: Text("See all",
-                          //       style: TextStyle(color: AppColors.violetColor)),
-                          // ),
-                        ),
+                            // Container(
+                            //   decoration: BoxDecoration(
+                            //       color: Colors.purpleAccent.withOpacity(0.3),
+                            //       borderRadius: BorderRadius.circular(20)),
+                            //   child: Text("See all",
+                            //       style: TextStyle(color: AppColors.violetColor)),
+                            // ),
+                            ),
                       ],
                     ),
 

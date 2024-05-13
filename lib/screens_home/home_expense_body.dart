@@ -341,14 +341,14 @@ class HomeBody extends StatelessWidget {
                               ),
                             )
 
-                          // Container(
-                          //   decoration: BoxDecoration(
-                          //       color: Colors.purpleAccent.withOpacity(0.3),
-                          //       borderRadius: BorderRadius.circular(20)),
-                          //   child: Text("See all",
-                          //       style: TextStyle(color: AppColors.violetColor)),
-                          // ),
-                        ),
+                            // Container(
+                            //   decoration: BoxDecoration(
+                            //       color: Colors.purpleAccent.withOpacity(0.3),
+                            //       borderRadius: BorderRadius.circular(20)),
+                            //   child: Text("See all",
+                            //       style: TextStyle(color: AppColors.violetColor)),
+                            // ),
+                            ),
                       ],
                     ),
 

@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:login_signup_project/common/widgets/success_screen/success_screen.dart';
+import 'package:login_signup_project/data/repositories/authentication_repository.dart';
+import 'package:login_signup_project/features/authentication/controller_verifyEmail/verify_email_controller.dart';
 import 'package:login_signup_project/features/authentication/screens/logins/login.dart';
 import 'package:login_signup_project/utils/helpers/helper_functions.dart';
 import '../../../../utils/constants/colors.dart';
@@ -13,15 +15,20 @@ import '../../../../utils/constants/sizes.dart';
 import '../../../../utils/constants/text_strings.dart';
 
 class VerifyEmailScreen extends StatelessWidget {
-  const VerifyEmailScreen({super.key});
+  const VerifyEmailScreen({super.key, this.email});
+
+  final String? email;
 
   @override
   Widget build(BuildContext context) {
+
+    final controller = Get.put(VerifyEmailController());
     final dark = THelperFunctions.isDarkMode(context);
+
     return Scaffold(
       appBar: AppBar(automaticallyImplyLeading: false, actions: [
         IconButton(
-            onPressed: () => Get.offAll(() => const LoginScreen()),
+            onPressed: () => AuthenticationRepository.instance.logout(),
             icon: const Icon(CupertinoIcons.clear)),
       ]),
       body: SingleChildScrollView(
@@ -42,86 +49,86 @@ class VerifyEmailScreen extends StatelessWidget {
                 textAlign: TextAlign.center),
             const SizedBox(height: TSizes.spaceBtwItems),
 
-            // Text('abc@gmail.com',
-            //     style: Theme.of(context).textTheme.labelLarge,
-            //     textAlign: TextAlign.center),
-            // const SizedBox(height: TSizes.spaceBtwItems),
+            Text(email ?? '',
+                style: Theme.of(context).textTheme.labelLarge,
+                textAlign: TextAlign.center),
+            const SizedBox(height: TSizes.spaceBtwItems),
 
             /// Enter number verification
-            Row(
-              children: [
-                Expanded(
-                  child: TextFormField(
-                    expands: false,
-                    textAlign: TextAlign.center,
-                    keyboardType: TextInputType.number, // Bàn phím hiển thị chỉ số
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly // Chỉ cho phép nhập các ký tự số
-                    ],
-                    style: TextStyle(
-                      fontSize: 24.0,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: TSizes.spaceBtwInputFields),
-                Expanded(
-                  child: TextFormField(
-                    expands: false,
-                    textAlign: TextAlign.center,
-                    keyboardType: TextInputType.number, // Bàn phím hiển thị chỉ số
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly // Chỉ cho phép nhập các ký tự số
-                    ],
-                    style: TextStyle(
-                      fontSize: 24.0,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: TSizes.spaceBtwInputFields),
-                Expanded(
-                  child: TextFormField(
-                    expands: false,
-                    textAlign: TextAlign.center,
-                    keyboardType: TextInputType.number, // Bàn phím hiển thị chỉ số
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly // Chỉ cho phép nhập các ký tự số
-                    ],
-                    style: TextStyle(
-                      fontSize: 24.0,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: TSizes.spaceBtwInputFields),
-                Expanded(
-                  child: TextFormField(
-                    expands: false,
-                    textAlign: TextAlign.center,
-                    keyboardType: TextInputType.number, // Bàn phím hiển thị chỉ số
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly // Chỉ cho phép nhập các ký tự số
-                    ],
-                    style: TextStyle(
-                      fontSize: 24.0,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: TSizes.spaceBtwInputFields),
-                Expanded(
-                  child: TextFormField(
-                    expands: false,
-                    textAlign: TextAlign.center,
-                    keyboardType: TextInputType.number, // Bàn phím hiển thị chỉ số
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly // Chỉ cho phép nhập các ký tự số
-                    ],
-                    style: TextStyle(
-                      fontSize: 24.0,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: TSizes.spaceBtwInputFields),
+            // Row(
+            //   children: [
+            //     Expanded(
+            //       child: TextFormField(
+            //         expands: false,
+            //         textAlign: TextAlign.center,
+            //         keyboardType: TextInputType.number, // Bàn phím hiển thị chỉ số
+            //         inputFormatters: <TextInputFormatter>[
+            //           FilteringTextInputFormatter.digitsOnly // Chỉ cho phép nhập các ký tự số
+            //         ],
+            //         style: TextStyle(
+            //           fontSize: 24.0,
+            //         ),
+            //       ),
+            //     ),
+            //     const SizedBox(width: TSizes.spaceBtwInputFields),
+            //     Expanded(
+            //       child: TextFormField(
+            //         expands: false,
+            //         textAlign: TextAlign.center,
+            //         keyboardType: TextInputType.number, // Bàn phím hiển thị chỉ số
+            //         inputFormatters: <TextInputFormatter>[
+            //           FilteringTextInputFormatter.digitsOnly // Chỉ cho phép nhập các ký tự số
+            //         ],
+            //         style: TextStyle(
+            //           fontSize: 24.0,
+            //         ),
+            //       ),
+            //     ),
+            //     const SizedBox(width: TSizes.spaceBtwInputFields),
+            //     Expanded(
+            //       child: TextFormField(
+            //         expands: false,
+            //         textAlign: TextAlign.center,
+            //         keyboardType: TextInputType.number, // Bàn phím hiển thị chỉ số
+            //         inputFormatters: <TextInputFormatter>[
+            //           FilteringTextInputFormatter.digitsOnly // Chỉ cho phép nhập các ký tự số
+            //         ],
+            //         style: TextStyle(
+            //           fontSize: 24.0,
+            //         ),
+            //       ),
+            //     ),
+            //     const SizedBox(width: TSizes.spaceBtwInputFields),
+            //     Expanded(
+            //       child: TextFormField(
+            //         expands: false,
+            //         textAlign: TextAlign.center,
+            //         keyboardType: TextInputType.number, // Bàn phím hiển thị chỉ số
+            //         inputFormatters: <TextInputFormatter>[
+            //           FilteringTextInputFormatter.digitsOnly // Chỉ cho phép nhập các ký tự số
+            //         ],
+            //         style: TextStyle(
+            //           fontSize: 24.0,
+            //         ),
+            //       ),
+            //     ),
+            //     const SizedBox(width: TSizes.spaceBtwInputFields),
+            //     Expanded(
+            //       child: TextFormField(
+            //         expands: false,
+            //         textAlign: TextAlign.center,
+            //         keyboardType: TextInputType.number, // Bàn phím hiển thị chỉ số
+            //         inputFormatters: <TextInputFormatter>[
+            //           FilteringTextInputFormatter.digitsOnly // Chỉ cho phép nhập các ký tự số
+            //         ],
+            //         style: TextStyle(
+            //           fontSize: 24.0,
+            //         ),
+            //       ),
+            //     ),
+            //   ],
+            // ),
+            // const SizedBox(height: TSizes.spaceBtwInputFields),
 
             Text(TTexts.confirmEmailSubTitle,
                 style: Theme.of(context).textTheme.labelMedium,
@@ -132,14 +139,15 @@ class VerifyEmailScreen extends StatelessWidget {
             SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                    onPressed: () => Get.to(
-                          () => SuccessScreen(
-                            image: TImages.receiveEmail,
-                            title: TTexts.yourAccountCreatedTitle,
-                            subTitle: TTexts.yourAccountCreatedSubtitle,
-                            onPressed: () => Get.to(() => const LoginScreen()),
-                          ),
-                        ),
+                    onPressed: () => controller.checkEmailVerificationStatus(),
+                        // Get.to(
+                        //   () => SuccessScreen(
+                        //     image: TImages.receiveEmail,
+                        //     title: TTexts.yourAccountCreatedTitle,
+                        //     subTitle: TTexts.yourAccountCreatedSubtitle,
+                        //     onPressed: () => Get.to(() => const LoginScreen()),
+                        //   ),
+                        // ),
                     style: ElevatedButton.styleFrom(
                         side: const BorderSide(color: Colors.deepPurple),
                         backgroundColor:
@@ -149,7 +157,7 @@ class VerifyEmailScreen extends StatelessWidget {
             SizedBox(
                 width: double.infinity,
                 child: TextButton(
-                    onPressed: () {}, child: const Text(TTexts.resendEmail))),
+                    onPressed: () => controller.sendEmailVerification(), child: const Text(TTexts.resendEmail))),
           ]),
         ),
       ),

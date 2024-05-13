@@ -16,10 +16,14 @@ dependencies:
   http: ^1.1.0
   intl: ^0.19.0
   logger: ^2.0.1
+  lottie: ^2.7.0
+  shimmer: ^3.0.0
+  connectivity_plus: ^5.0.1
   url_launcher: ^6.1.12
   flutter_native_splash: ^2.4.0
   smooth_page_indicator: ^1.1.0
   persistent_bottom_nav_bar: ^5.0.2
+  image_picker: ^1.1.1
 
   #State management:
   get: ^4.6.5
@@ -29,6 +33,15 @@ dependencies:
   iconsax: ^0.0.8
   cupertino_icons: ^1.0.6
   flutter_slidable: ^3.0.0
+
+  #Firebase
+  firebase_core: ^2.31.0
+  firebase_auth: ^4.14.0
+  cloud_firestore: ^4.13.1
+  google_sign_in: ^6.2.1
+  firebase_storage: ^11.7.5
+  cached_network_image: ^3.3.1
+
 
 dev_dependencies:
   flutter_test:
@@ -45,13 +58,14 @@ flutter:
 
   #  LOCAL ASSETS
   assets:
-    - assets/icons/brands/
+#    - assets/icons/brands/
     - assets/icons/transaction/
     - assets/images/
     - assets/images/on_boarding_images/
     - assets/images/animations/
     - assets/images/users/
     - assets/logos/
+    - assets/lotties/
 
   fonts:
     - family: Poppins

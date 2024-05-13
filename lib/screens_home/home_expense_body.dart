@@ -42,7 +42,8 @@ class HomeBody extends StatelessWidget {
                 ),
                 //bell icon
                 IconButton(
-                  icon: Icon(CupertinoIcons.bell_fill, color: AppColors.violetColor),
+                  icon: Icon(CupertinoIcons.bell_fill,
+                      color: AppColors.violetColor),
                   onPressed: () => Get.to(() => const NotificationScreen()),
                 ),
               ],
@@ -89,7 +90,7 @@ class HomeBody extends StatelessWidget {
                     child: const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Icon(CupertinoIcons.camera_fill,
+                        Icon(CupertinoIcons.add_circled,
                             color: Colors.white, size: 30),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -120,7 +121,7 @@ class HomeBody extends StatelessWidget {
                     child: const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Icon(CupertinoIcons.camera_fill,
+                        Icon(CupertinoIcons.minus_circle,
                             color: Colors.white, size: 30),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -147,8 +148,7 @@ class HomeBody extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
-                      margin:
-                      const EdgeInsets.only(top: 25),
+                      margin: const EdgeInsets.only(top: 25),
                       child: const Text(
                         'Spend Frequency',
                         textAlign: TextAlign.left,
@@ -165,9 +165,8 @@ class HomeBody extends StatelessWidget {
                       height: 20,
                     ),
                     //image chart
-                    Container(
-                      child: Image.asset('assets/images/chart.png'),
-                    ),
+                    Image.asset('assets/images/chart.png',
+                        height: 200, width: double.maxFinite),
 
                     const SizedBox(
                       height: 10,

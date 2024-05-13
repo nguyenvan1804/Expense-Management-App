@@ -1,0 +1,90 @@
+{
+  "project_info": {
+    "project_number": "444681575846",
+    "project_id": "expense-app-f7a15",
+    "storage_bucket": "expense-app-f7a15.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:444681575846:android:ddd606d0429f5d32be8367",
+        "android_client_info": {
+          "package_name": "com.example.login_signup_project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "444681575846-lgffvb7aq9d4sldbph5f3vktbsnjbhj2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCRCYM1m_C4HTf8wdFb0RztWtK74d2RGw0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "444681575846-lgffvb7aq9d4sldbph5f3vktbsnjbhj2.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "444681575846-iarekn5emp7rsooc1t4sk425siiqovqm.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.loginSignupProject"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:444681575846:android:8cf9cfff1b4870cdbe8367",
+        "android_client_info": {
+          "package_name": "com.nguyenvan.expense_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "444681575846-eln77vi2u72lhl6jpucc5jrtab0mdm3u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nguyenvan.expense_app",
+            "certificate_hash": "81b2987f85501a7ab873fb24db280a3f22e365fa"
+          }
+        },
+        {
+          "client_id": "444681575846-lgffvb7aq9d4sldbph5f3vktbsnjbhj2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCRCYM1m_C4HTf8wdFb0RztWtK74d2RGw0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "444681575846-lgffvb7aq9d4sldbph5f3vktbsnjbhj2.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "444681575846-iarekn5emp7rsooc1t4sk425siiqovqm.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.loginSignupProject"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

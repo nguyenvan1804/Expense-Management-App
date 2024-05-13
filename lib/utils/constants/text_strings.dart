@@ -55,7 +55,7 @@ class TTexts {
   static const String changeYourPasswordTitle = "Password Reset Email Sent";
   static const String changeYourPasswordSubtitle =
       "Your Account Security is our Priority de've sent you a Secure Link to Safely Change Your Password and Keep Your Account Protected.";
-  static const String confirmEmail = "Enter your Verification Code";
+  static const String confirmEmail = "Verify your email address!";
   static const String confirmEmailSubTitle =
       "We send verification code to your email 'nguyentran*****@gmail.com'. You can check your inbox.";
   static const String emailNotReceiveMessage =

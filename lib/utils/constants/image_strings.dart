@@ -18,7 +18,9 @@ class TImages {
   // Animations
   static const String deliveryEmail = "assets/images/animations/send_email.png";
   static const String receiveEmail = "assets/images/animations/receive_email.png";
-
   static const String user = "assets/images/users/user.png";
 
+  //Lotties
+  static const String successfullyRegisterAnimation = "assets/lotties/Animation_success.json";
+  static const String docerAnimation = "assets/lotties/Animation_docer.json";
 }

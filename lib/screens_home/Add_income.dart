@@ -1,4 +1,15 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:login_signup_project/Widget/bottom_sheet.dart';
+import 'package:login_signup_project/common/widgets/images/t_circular_images.dart';
+import 'package:login_signup_project/features/Controller/income_controller.dart';
+import 'package:login_signup_project/features/model/income_model.dart';
+import 'package:login_signup_project/utils/constants/image_strings.dart';
+import 'package:login_signup_project/utils/shimmer/shimmer.dart';
 import 'home_screen.dart';
 import 'package:login_signup_project/utils/constants/color_constants.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,6 +25,18 @@ class AddInconme extends StatefulWidget {
 
 class _AddInconmeState extends State<AddInconme> {
   String selectedItem = 'Income';
+  final IncomeController incomeController = Get.put(IncomeController());
+
+  TextEditingController ammountController = TextEditingController();
+  TextEditingController categoryController = TextEditingController();
+  TextEditingController dateController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+
+  int ammount = 0;
+  String category = '';
+  String date = '';
+  String description = '';
+  String attachmentUrl = '';
 
   @override
   Widget build(BuildContext context) {
@@ -101,10 +124,31 @@ class _AddInconmeState extends State<AddInconme> {
                         "How much?",
                         style: TextStyle(color: AppColors.textColor),
                       ),
-                      const Text(
-                        "\$0",
-                        style: TextStyle(color: Colors.white, fontSize: 48),
-                      ),
+                      TextField(
+                        controller: ammountController,
+
+                        decoration: InputDecoration(
+                          enabledBorder: const OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                          ),
+                          focusedBorder: const OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                          ),
+                          hintText: "\$0",
+                          hintStyle: TextStyle(
+                              color: AppColors.textColor, fontSize: 48),
+                        ),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 48,
+                        ),
+                        // Add any additional TextField properties as needed
+                        onChanged: (value) {
+                          setState(() {
+                            ammount = int.parse(ammountController.text);
+                          });
+                        },
+                      )
                     ],
                   ),
                 ),
@@ -114,7 +158,7 @@ class _AddInconmeState extends State<AddInconme> {
           Expanded(
             child: Container(
               width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(50.0),
@@ -125,269 +169,269 @@ class _AddInconmeState extends State<AddInconme> {
                 child: Column(
                   // mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    GestureDetector(
-                      onTap: () {
-                        showModalBottomSheet<void>(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return SingleChildScrollView(
-                              child: Container(
-                                decoration: const BoxDecoration(
-                                  //top border radius
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(20),
-                                    topRight: Radius.circular(20),
-                                  ),
-                                ),
-                                // height: 800,
-                                // color: Colors.white,
-                                child: Center(
-                                  child: Column(
-                                    // mainAxisAlignment:
-                                    //     MainAxisAlignment.spaceAround,
-                                    // mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            top: 20, bottom: 20),
-                                        child: Text(
-                                          'Category List',
-                                          style: TextStyle(
-                                            color: AppColors.mainBlackColor,
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          ElevatedButton(
-                                              onPressed: () {},
-                                              style: ButtonStyle(
-                                                backgroundColor:
-                                                MaterialStateProperty.all(
-                                                    Colors.purple[50]),
-                                              ),
-                                              child: const Padding(
-                                                padding: EdgeInsets.only(
-                                                    left: 40, right: 40),
-                                                child: Text('Expense'),
-                                              )),
-                                          const SizedBox(width: 20),
-                                          ElevatedButton(
-                                              onPressed: () {},
-                                              child: const Padding(
-                                                padding: EdgeInsets.only(
-                                                    left: 40, right: 40),
-                                                child: Text('Income'),
-                                              )),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 20),
-                                      Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Container(
-                                                margin: const EdgeInsets.only(
-                                                    left: 40),
-                                                padding:
-                                                const EdgeInsets.all(10),
-                                                decoration: ShapeDecoration(
-                                                  color:
-                                                  const Color(0xFFFCEED3),
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                    BorderRadius.circular(
-                                                        14),
-                                                  ),
-                                                ),
-                                                child: const Icon(
-                                                  Icons.shopping_cart_sharp,
-                                                  color: Color.fromARGB(
-                                                      255, 131, 90, 9),
-                                                ),
-                                              ),
-                                              const SizedBox(
-                                                width: 10,
-                                              ),
-                                              Text("Shopping",
-                                                  style: TextStyle(
-                                                      color: AppColors
-                                                          .mainBlackColor,
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                      FontWeight.w500)),
-                                            ],
-                                          ),
-                                          IconButton(
-                                            onPressed: () {},
-                                            icon: const Icon(Icons.edit),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(
-                                        height: 20,
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                            children: [
-                                              Container(
-                                                margin: const EdgeInsets.only(
-                                                    left: 40),
-                                                padding:
-                                                const EdgeInsets.all(10),
-                                                decoration: ShapeDecoration(
-                                                  color: Colors.red[50],
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                    BorderRadius.circular(
-                                                        14),
-                                                  ),
-                                                ),
-                                                child: const Icon(
-                                                  Icons.food_bank,
-                                                  color: Colors.red,
-                                                ),
-                                              ),
-                                              const SizedBox(
-                                                width: 10,
-                                              ),
-                                              Text("Food",
-                                                  style: TextStyle(
-                                                      color: AppColors
-                                                          .mainBlackColor,
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                      FontWeight.w500)),
-                                            ],
-                                          ),
-                                          IconButton(
-                                            onPressed: () {},
-                                            icon: const Icon(Icons.edit),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(
-                                        height: 20,
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                            children: [
-                                              Container(
-                                                margin: const EdgeInsets.only(
-                                                    left: 40),
-                                                padding:
-                                                const EdgeInsets.all(10),
-                                                decoration: ShapeDecoration(
-                                                  color: Colors.blue[50],
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                    BorderRadius.circular(
-                                                        14),
-                                                  ),
-                                                ),
-                                                child: const Icon(
-                                                  Icons.directions_car,
-                                                  color: Colors.blue,
-                                                ),
-                                              ),
-                                              const SizedBox(
-                                                width: 10,
-                                              ),
-                                              Text("Transportation",
-                                                  style: TextStyle(
-                                                      color: AppColors
-                                                          .mainBlackColor,
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                      FontWeight.w500)),
-                                            ],
-                                          ),
-                                          IconButton(
-                                            onPressed: () {},
-                                            icon: const Icon(Icons.edit),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(
-                                        height: 20,
-                                      ),
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          //
-                                        },
-                                        style: ButtonStyle(
-                                          padding: MaterialStateProperty.all(
-                                            const EdgeInsets.symmetric(
-                                                horizontal: 100, vertical: 10),
-                                          ),
-                                        ),
-                                        child: const Padding(
-                                            padding: EdgeInsets.only(
-                                                left: 0, right: 0),
-                                            child: Text(
-                                              "Add Category",
-                                              style: TextStyle(
-                                                  color: Colors.white),
-                                              textAlign: TextAlign.center,
-                                            )),
-                                      ),
-                                      SizedBox(
-                                        height: 35,
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        );
-                      },
-                      child: Container(
-                        margin: const EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: Colors.grey.shade200),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 10, right: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "Category",
-                                style: TextStyle(color: AppColors.textColor),
-                              ),
-                              IconButton(
-                                onPressed: () {},
-                                icon: const Icon(Icons.keyboard_arrow_down),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
+                    // GestureDetector(
+                    //   onTap: () {
+                    //     showModalBottomSheet<void>(
+                    //       context: context,
+                    //       builder: (BuildContext context) {
+                    //         return SingleChildScrollView(
+                    //           child: Container(
+                    //             decoration: const BoxDecoration(
+                    //               //top border radius
+                    //               borderRadius: BorderRadius.only(
+                    //                 topLeft: Radius.circular(20),
+                    //                 topRight: Radius.circular(20),
+                    //               ),
+                    //             ),
+                    //             // height: 800,
+                    //             // color: Colors.white,
+                    //             child: Center(
+                    //               child: Column(
+                    //                 // mainAxisAlignment:
+                    //                 //     MainAxisAlignment.spaceAround,
+                    //                 // mainAxisSize: MainAxisSize.min,
+                    //                 children: <Widget>[
+                    //                   Padding(
+                    //                     padding: const EdgeInsets.only(
+                    //                         top: 20, bottom: 20),
+                    //                     child: Text(
+                    //                       'Category List',
+                    //                       style: TextStyle(
+                    //                         color: AppColors.mainBlackColor,
+                    //                         fontSize: 20,
+                    //                         fontWeight: FontWeight.bold,
+                    //                       ),
+                    //                     ),
+                    //                   ),
+                    //                   Row(
+                    //                     mainAxisAlignment:
+                    //                     MainAxisAlignment.spaceEvenly,
+                    //                     children: [
+                    //                       ElevatedButton(
+                    //                           onPressed: () {},
+                    //                           style: ButtonStyle(
+                    //                             backgroundColor:
+                    //                             MaterialStateProperty.all(
+                    //                                 Colors.purple[50]),
+                    //                           ),
+                    //                           child: const Padding(
+                    //                             padding: EdgeInsets.only(
+                    //                                 left: 40, right: 40),
+                    //                             child: Text('Expense'),
+                    //                           )),
+                    //                       const SizedBox(width: 20),
+                    //                       ElevatedButton(
+                    //                           onPressed: () {},
+                    //                           child: const Padding(
+                    //                             padding: EdgeInsets.only(
+                    //                                 left: 40, right: 40),
+                    //                             child: Text('Income'),
+                    //                           )),
+                    //                     ],
+                    //                   ),
+                    //                   const SizedBox(height: 20),
+                    //                   Row(
+                    //                     mainAxisAlignment:
+                    //                     MainAxisAlignment.spaceBetween,
+                    //                     children: [
+                    //                       Row(
+                    //                         children: [
+                    //                           Container(
+                    //                             margin: const EdgeInsets.only(
+                    //                                 left: 40),
+                    //                             padding:
+                    //                             const EdgeInsets.all(10),
+                    //                             decoration: ShapeDecoration(
+                    //                               color:
+                    //                               const Color(0xFFFCEED3),
+                    //                               shape: RoundedRectangleBorder(
+                    //                                 borderRadius:
+                    //                                 BorderRadius.circular(
+                    //                                     14),
+                    //                               ),
+                    //                             ),
+                    //                             child: const Icon(
+                    //                               Icons.shopping_cart_sharp,
+                    //                               color: Color.fromARGB(
+                    //                                   255, 131, 90, 9),
+                    //                             ),
+                    //                           ),
+                    //                           const SizedBox(
+                    //                             width: 10,
+                    //                           ),
+                    //                           Text("Shopping",
+                    //                               style: TextStyle(
+                    //                                   color: AppColors
+                    //                                       .mainBlackColor,
+                    //                                   fontSize: 16,
+                    //                                   fontWeight:
+                    //                                   FontWeight.w500)),
+                    //                         ],
+                    //                       ),
+                    //                       IconButton(
+                    //                         onPressed: () {},
+                    //                         icon: const Icon(Icons.edit),
+                    //                       ),
+                    //                     ],
+                    //                   ),
+                    //                   const SizedBox(
+                    //                     height: 20,
+                    //                   ),
+                    //                   Row(
+                    //                     mainAxisAlignment:
+                    //                     MainAxisAlignment.spaceBetween,
+                    //                     children: [
+                    //                       Row(
+                    //                         mainAxisAlignment:
+                    //                         MainAxisAlignment.start,
+                    //                         children: [
+                    //                           Container(
+                    //                             margin: const EdgeInsets.only(
+                    //                                 left: 40),
+                    //                             padding:
+                    //                             const EdgeInsets.all(10),
+                    //                             decoration: ShapeDecoration(
+                    //                               color: Colors.red[50],
+                    //                               shape: RoundedRectangleBorder(
+                    //                                 borderRadius:
+                    //                                 BorderRadius.circular(
+                    //                                     14),
+                    //                               ),
+                    //                             ),
+                    //                             child: const Icon(
+                    //                               Icons.food_bank,
+                    //                               color: Colors.red,
+                    //                             ),
+                    //                           ),
+                    //                           const SizedBox(
+                    //                             width: 10,
+                    //                           ),
+                    //                           Text("Food",
+                    //                               style: TextStyle(
+                    //                                   color: AppColors
+                    //                                       .mainBlackColor,
+                    //                                   fontSize: 16,
+                    //                                   fontWeight:
+                    //                                   FontWeight.w500)),
+                    //                         ],
+                    //                       ),
+                    //                       IconButton(
+                    //                         onPressed: () {},
+                    //                         icon: const Icon(Icons.edit),
+                    //                       ),
+                    //                     ],
+                    //                   ),
+                    //                   const SizedBox(
+                    //                     height: 20,
+                    //                   ),
+                    //                   Row(
+                    //                     mainAxisAlignment:
+                    //                     MainAxisAlignment.spaceBetween,
+                    //                     children: [
+                    //                       Row(
+                    //                         mainAxisAlignment:
+                    //                         MainAxisAlignment.start,
+                    //                         children: [
+                    //                           Container(
+                    //                             margin: const EdgeInsets.only(
+                    //                                 left: 40),
+                    //                             padding:
+                    //                             const EdgeInsets.all(10),
+                    //                             decoration: ShapeDecoration(
+                    //                               color: Colors.blue[50],
+                    //                               shape: RoundedRectangleBorder(
+                    //                                 borderRadius:
+                    //                                 BorderRadius.circular(
+                    //                                     14),
+                    //                               ),
+                    //                             ),
+                    //                             child: const Icon(
+                    //                               Icons.directions_car,
+                    //                               color: Colors.blue,
+                    //                             ),
+                    //                           ),
+                    //                           const SizedBox(
+                    //                             width: 10,
+                    //                           ),
+                    //                           Text("Transportation",
+                    //                               style: TextStyle(
+                    //                                   color: AppColors
+                    //                                       .mainBlackColor,
+                    //                                   fontSize: 16,
+                    //                                   fontWeight:
+                    //                                   FontWeight.w500)),
+                    //                         ],
+                    //                       ),
+                    //                       IconButton(
+                    //                         onPressed: () {},
+                    //                         icon: const Icon(Icons.edit),
+                    //                       ),
+                    //                     ],
+                    //                   ),
+                    //                   const SizedBox(
+                    //                     height: 20,
+                    //                   ),
+                    //                   ElevatedButton(
+                    //                     onPressed: () {
+                    //                       //
+                    //                     },
+                    //                     style: ButtonStyle(
+                    //                       padding: MaterialStateProperty.all(
+                    //                         const EdgeInsets.symmetric(
+                    //                             horizontal: 100, vertical: 10),
+                    //                       ),
+                    //                     ),
+                    //                     child: const Padding(
+                    //                         padding: EdgeInsets.only(
+                    //                             left: 0, right: 0),
+                    //                         child: Text(
+                    //                           "Add Category",
+                    //                           style: TextStyle(
+                    //                               color: Colors.white),
+                    //                           textAlign: TextAlign.center,
+                    //                         )),
+                    //                   ),
+                    //                   SizedBox(
+                    //                     height: 35,
+                    //                   )
+                    //                 ],
+                    //               ),
+                    //             ),
+                    //           ),
+                    //         );
+                    //       },
+                    //     );
+                    //   },
+                    //   child: Container(
+                    //     margin: const EdgeInsets.all(20),
+                    //     decoration: BoxDecoration(
+                    //       borderRadius: BorderRadius.circular(20),
+                    //       border: Border.all(color: Colors.grey.shade200),
+                    //     ),
+                    //     child: Padding(
+                    //       padding: const EdgeInsets.only(left: 10, right: 10),
+                    //       child: Row(
+                    //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //         children: [
+                    //           Text(
+                    //             "Category",
+                    //             style: TextStyle(color: AppColors.textColor),
+                    //           ),
+                    //           IconButton(
+                    //             onPressed: () {},
+                    //             icon: const Icon(Icons.keyboard_arrow_down),
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
+
                     Container(
                       margin: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                            color: Color.fromARGB(255, 249, 245, 245)),
+                        border: Border.all(color: Colors.grey.shade300),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.only(left: 0, right: 0),
@@ -397,15 +441,26 @@ class _AddInconmeState extends State<AddInconme> {
                             Expanded(
                               child: TextField(
                                 decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: 'Description',
+                                  enabledBorder: const OutlineInputBorder(
+                                    borderSide: BorderSide.none,
+                                  ),
+                                  focusedBorder: const OutlineInputBorder(
+                                    borderSide: BorderSide.none,
+                                  ),
+                                  hintText: 'Category',
                                   hintStyle:
-                                  TextStyle(color: AppColors.textColor),
+                                      TextStyle(color: AppColors.textColor),
                                 ),
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Colors.black,
                                 ),
                                 // Add any additional TextField properties as needed
+                                controller: categoryController,
+                                onChanged: (value) {
+                                  setState(() {
+                                    category = categoryController.text;
+                                  });
+                                },
                               ),
                             ),
                           ],
@@ -416,26 +471,107 @@ class _AddInconmeState extends State<AddInconme> {
                       margin: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: Colors.grey.shade200),
+                        border: Border.all(color: Colors.grey.shade300),
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.only(left: 10, right: 10),
+                        padding: const EdgeInsets.only(left: 0, right: 0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              "Tuesday, 12 May 2021",
-                              style: TextStyle(color: AppColors.textColor),
-                            ),
-                            // const Spacer(),
-                            IconButton(
-                              onPressed: () {},
-                              icon: const Icon(Icons.keyboard_arrow_down),
+                            Expanded(
+                              child: TextField(
+                                decoration: InputDecoration(
+                                  enabledBorder: const OutlineInputBorder(
+                                    borderSide: BorderSide.none,
+                                  ),
+                                  focusedBorder: const OutlineInputBorder(
+                                    borderSide: BorderSide.none,
+                                  ),
+                                  hintText: 'Description',
+                                  hintStyle:
+                                      TextStyle(color: AppColors.textColor),
+                                ),
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                ),
+                                // Add any additional TextField properties as needed
+                                controller: descriptionController,
+                                onChanged: (value) {
+                                  setState(() {
+                                    description = descriptionController.text;
+                                  });
+                                },
+                              ),
                             ),
                           ],
                         ),
                       ),
                     ),
+                    Container(
+                      margin: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: Colors.grey.shade300),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 0, right: 0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                decoration: InputDecoration(
+                                  enabledBorder: const OutlineInputBorder(
+                                    borderSide: BorderSide.none,
+                                  ),
+                                  focusedBorder: const OutlineInputBorder(
+                                    borderSide: BorderSide.none,
+                                  ),
+                                  hintText: '12 May 2021',
+                                  hintStyle:
+                                      TextStyle(color: AppColors.textColor),
+                                ),
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                ),
+                                // Add any additional TextField properties as needed
+                                controller: dateController,
+                                onChanged: (value) {
+                                  setState(() {
+                                    date = dateController.text;
+                                  });
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    // Container(
+                    //   margin: const EdgeInsets.all(20),
+                    //   decoration: BoxDecoration(
+                    //     borderRadius: BorderRadius.circular(20),
+                    //     border: Border.all(color: Colors.grey.shade200),
+                    //   ),
+                    //   child: Padding(
+                    //     padding: const EdgeInsets.only(left: 10, right: 10),
+                    //     child: Row(
+                    //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //       children: [
+                    //         Text(
+                    //           "Tuesday, 12 May 2021",
+                    //           style: TextStyle(color: AppColors.textColor),
+                    //         ),
+                    //         // const Spacer(),
+                    //         IconButton(
+                    //           onPressed: () {},
+                    //           icon: const Icon(Icons.keyboard_arrow_down),
+                    //         ),
+                    //       ],
+                    //     ),
+                    //   ),
+                    // ),
+
                     const SizedBox(
                       height: 50,
                     ),
@@ -445,22 +581,53 @@ class _AddInconmeState extends State<AddInconme> {
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      child: Row(
+                      child: Column(
                         children: [
-                          IconButton(
-                            onPressed: () {},
-                            icon: const Icon(Icons.attach_file_sharp),
+                          Row(
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  //add attachment
+                                  
+                                  setState(() {});
+                                },
+                                icon: const Icon(Icons.attach_file_sharp),
+                              ),
+                              Text(
+                                "Add attachment",
+                                style: TextStyle(color: AppColors.textColor),
+                              ),
+                            ],
                           ),
-                          Text(
-                            "Add attachment",
-                            style: TextStyle(color: AppColors.textColor),
-                          ),
+                          //print attachment image
+                          Obx(() {
+                            return SizedBox();
+                          }),
                         ],
                       ),
                     ),
                     const SizedBox(height: 50),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        //map the data to the model
+                        final income = IncomeModel(
+                          ammount: ammount,
+                          category: category ?? '',
+                          date: date ?? '',
+                          description: description ?? '',
+                          attachment: attachmentUrl ?? '',
+                        );
+
+                        //add the income to the database
+                        incomeController.addIncome(income);
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const HomeScreen(),
+                          ),
+                        );
+                      },
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(
                           selectedItem == 'Income'

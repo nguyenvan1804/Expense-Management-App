@@ -270,28 +270,6 @@ class _DetailTransactionState extends State<DetailTransaction> {
                     ),
                   ),
                 ),
-                // ElevatedButton(
-                //   onPressed: () {
-                //     if (isEditing) {
-                //       _updateTransaction(context, widget.transactionId);
-                //       isEditing = false;
-                //     } else {
-                //       isEditing = true;
-                //     }
-                //   },
-                //   style: ElevatedButton.styleFrom(
-                //     backgroundColor: appColor.primaryColor,
-                //     shape: RoundedRectangleBorder(
-                //       borderRadius: BorderRadius.circular(30),
-                //     ),
-                //   ),
-                //   child: Text(isEditing ? 'Save' : 'Edit',
-                //     style: TextStyle(
-                //       fontSize: 15,
-                //       color: Colors.white,
-                //     ),
-                //   ),
-                // ),
               )
             ],
           ),
@@ -323,33 +301,6 @@ class _DetailTransactionState extends State<DetailTransaction> {
       );
     }
   }
-
-
-  // Future<void> _updateTransaction(BuildContext context, String transactionId) async {
-  //   try {
-  //     await FirebaseFirestore.instance
-  //       .collection('Income')
-  //       .doc(transactionId)
-  //       .update({
-  //         'amount': int.parse(amountController.text),
-  //         'category': categoryController.text,
-  //         'description': descriptionController.text,
-  //         'date': dateController.text,
-  //       });
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(
-  //         content: Text('Transaction updated successfully'),
-  //       ),
-  //     );
-  //   } catch (error) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(
-  //         content: Text('Failed to update transaction: $error'),
-  //       ),
-  //     );
-  //   }
-  // }
-
 
   Future<void> _deleteTransactionAndNavigateHome(BuildContext context) async {
     bool confirmDelete = await showDialog(

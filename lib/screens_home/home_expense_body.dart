@@ -10,16 +10,39 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get_utils/get_utils.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../features/detail_transaction/detail_transaction.dart';
 import 'TransacsionScreen.dart';
 
 class HomeBody extends StatelessWidget {
-  const HomeBody({super.key});
+  // const HomeBody({super.key});
+  HomeBody({Key? key}) : super(key: key);
+  List<String> transactionIds = [];
+
+ // Hàm getDataFromFirebase để lấy dữ liệu từ Firebase
+  Future<void> getDataFromFirebase() async {
+    try {
+      CollectionReference transactionsCollection =
+          FirebaseFirestore.instance.collection('Income');
+
+      QuerySnapshot querySnapshot = await transactionsCollection.get();
+
+      querySnapshot.docs.forEach((DocumentSnapshot document) {
+        String transactionId = document.id;
+        // Thêm transactionId vào danh sách
+        transactionIds.add(transactionId);
+        print('Transaction ID: $transactionId');
+      });
+    } catch (error) {
+      print('Error: $error');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final incomeController = Get.put(IncomeController());
+    getDataFromFirebase();
 
     return Scaffold(
       // appBar: AppBar(),
@@ -524,12 +547,14 @@ class HomeBody extends StatelessWidget {
                                   incomeController.incomeList[index];
                               return GestureDetector(
                                 onTap: () {
-                                  // Điều hướng đến DetailScreen khi nhấn vào phần tử
+                                  // Lấy transactionId từ danh sách đã lưu trữ
+                                  String transactionId = transactionIds[index];
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            DetailTransaction()),
+                                      builder: (context) => DetailTransaction(
+                                          transactionId: transactionId),
+                                    ),
                                   );
                                 },
                                 child: Container(
@@ -564,7 +589,7 @@ class HomeBody extends StatelessWidget {
                                       ),
                                       Expanded(
                                         child: Column(
-                                          mainAxisAlignment:
+                                          mainAxisAlignment: 
                                               MainAxisAlignment.start,
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,

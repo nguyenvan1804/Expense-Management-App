@@ -2121,11 +2121,11 @@ class _StatisticScreenState extends State<StatisticScreen> {
                 GestureDetector(
                   onTap: () {
                     // Điều hướng đến DetailScreen khi nhấn vào phần tử
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => DetailTransaction()),
-                    );
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //       builder: (context) => DetailTransaction()),
+                    // );
                   },
                   child: Container(
                     margin:
@@ -2204,11 +2204,11 @@ class _StatisticScreenState extends State<StatisticScreen> {
                 GestureDetector(
                   onTap: () {
                     // Điều hướng đến DetailScreen khi nhấn vào phần tử
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => DetailTransaction()),
-                    );
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //       builder: (context) => DetailTransaction()),
+                    // );
                   },
                   child: Container(
                     margin:
@@ -2294,11 +2294,11 @@ class _StatisticScreenState extends State<StatisticScreen> {
                 GestureDetector(
                   onTap: () {
                     // Điều hướng đến DetailScreen khi nhấn vào phần tử
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => DetailTransaction()),
-                    );
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //       builder: (context) => DetailTransaction()),
+                    // );
                   },
                   child: Container(
                     margin:
@@ -2381,11 +2381,11 @@ class _StatisticScreenState extends State<StatisticScreen> {
                 GestureDetector(
                   onTap: () {
                     // Điều hướng đến DetailScreen khi nhấn vào phần tử
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => DetailTransaction()),
-                    );
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //       builder: (context) => DetailTransaction()),
+                    // );
                   },
                   child: Container(
                     margin:

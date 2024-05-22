@@ -11,23 +11,27 @@ import 'package:login_signup_project/features/model/income_model.dart';
 import 'package:login_signup_project/utils/constants/image_strings.dart';
 import 'package:login_signup_project/utils/shimmer/shimmer.dart';
 import 'home_screen.dart';
+import 'home_expense_body.dart';
 import 'package:login_signup_project/utils/constants/color_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 
-class AddInconme extends StatefulWidget {
-  const AddInconme({super.key});
+
+class AddIncome extends StatefulWidget {
+  const AddIncome({Key? key});
 
   @override
-  State<AddInconme> createState() => _AddInconmeState();
+  State<AddIncome> createState() => _AddIncomeState();
 }
 
-class _AddInconmeState extends State<AddInconme> {
+class _AddIncomeState extends State<AddIncome> {
   String selectedItem = 'Income';
   final IncomeController incomeController = Get.put(IncomeController());
 
-  TextEditingController ammountController = TextEditingController();
+  TextEditingController amountController = TextEditingController();
   TextEditingController categoryController = TextEditingController();
   TextEditingController dateController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
@@ -36,24 +40,61 @@ class _AddInconmeState extends State<AddInconme> {
   String category = '';
   String date = '';
   String description = '';
-  String attachmentUrl = '';
+  File? attachment;
+  bool isIncome = true;
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2020),
+      lastDate: DateTime.now(),
+    );
+    if (pickedDate != null) {
+      setState(() {
+        final formattedDate = DateFormat('dd/MM/yyyy').format(pickedDate);
+        date = formattedDate;
+        dateController.text = date;
+      });
+      // Loại bỏ focus trên TextField sau khi chọn xong ngày
+      FocusScope.of(context).unfocus();
+    }
+  }
+
+
+  Future<void> _selectAttachment(BuildContext context) async {
+  final picker = ImagePicker();
+  final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+  if (pickedFile != null) {
+    if (pickedFile.path != null && pickedFile.path.isNotEmpty) {
+      setState(() {
+        attachment = File(pickedFile.path);
+      });
+    } else {
+      print("Invalid image path: ${pickedFile.path}");
+    }
+  } else {
+    print("No image picked");
+  }
+}
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
-            // Navigator.pop(context);
+            Navigator.pop(context);
           },
         ),
         backgroundColor: selectedItem == 'Income'
-            ? Color.fromARGB(255, 10, 135, 15)
-            : Color.fromARGB(255, 155, 10, 10),
+            ? const Color.fromARGB(255, 10, 135, 15)
+            : const Color.fromARGB(255, 155, 10, 10),
         title: Center(
           child: DropdownButtonFormField<String>(
-            dropdownColor: Color.fromARGB(255, 98, 98, 98),
+            dropdownColor: const Color.fromARGB(255, 98, 98, 98),
             value: 'Income',
             decoration: InputDecoration(
               isDense: true,
@@ -69,11 +110,11 @@ class _AddInconmeState extends State<AddInconme> {
                   ? Color.fromARGB(255, 10, 135, 15)
                   : Color.fromARGB(255, 155, 10, 10),
             ),
-            icon: Icon(
+            icon: const Icon(
               Icons.arrow_drop_down,
               color: Colors.white,
             ),
-            items: [
+            items: const [
               DropdownMenuItem(
                 value: 'Income',
                 child: Text(
@@ -108,46 +149,49 @@ class _AddInconmeState extends State<AddInconme> {
           Container(
             decoration: BoxDecoration(
               color: selectedItem == 'Income'
-                  ? Color.fromARGB(255, 10, 135, 15)
-                  : Color.fromARGB(255, 155, 10, 10),
+                  ? const Color.fromARGB(255, 10, 135, 15)
+                  : const Color.fromARGB(255, 155, 10, 10),
             ),
             child: Column(
               children: [
                 Container(
                   padding: const EdgeInsets.all(30),
-                  // height: double.infinity,
                   width: double.infinity,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         "How much?",
                         style: TextStyle(color: AppColors.textColor),
                       ),
-                      TextField(
-                        controller: ammountController,
-
-                        decoration: InputDecoration(
-                          enabledBorder: const OutlineInputBorder(
-                            borderSide: BorderSide.none,
+                      GestureDetector(
+                        onTap: () => _showAmountKeyboard(context),
+                        child: TextField(
+                          controller: amountController,
+                          decoration: const InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                            ),
+                            hintText: "\$0",
+                            hintStyle: TextStyle(
+                              color: AppColors.textColor,
+                              fontSize: 48,
+                            ),
                           ),
-                          focusedBorder: const OutlineInputBorder(
-                            borderSide: BorderSide.none,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 48,
                           ),
-                          hintText: "\$0",
-                          hintStyle: TextStyle(
-                              color: AppColors.textColor, fontSize: 48),
+                          keyboardType: TextInputType.number,
+                          onChanged: (value) {
+                            setState(() {
+                              ammount = int.parse(value);
+                            });
+                          },
                         ),
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 48,
-                        ),
-                        // Add any additional TextField properties as needed
-                        onChanged: (value) {
-                          setState(() {
-                            ammount = int.parse(ammountController.text);
-                          });
-                        },
                       )
                     ],
                   ),
@@ -167,266 +211,7 @@ class _AddInconmeState extends State<AddInconme> {
               ),
               child: SingleChildScrollView(
                 child: Column(
-                  // mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    // GestureDetector(
-                    //   onTap: () {
-                    //     showModalBottomSheet<void>(
-                    //       context: context,
-                    //       builder: (BuildContext context) {
-                    //         return SingleChildScrollView(
-                    //           child: Container(
-                    //             decoration: const BoxDecoration(
-                    //               //top border radius
-                    //               borderRadius: BorderRadius.only(
-                    //                 topLeft: Radius.circular(20),
-                    //                 topRight: Radius.circular(20),
-                    //               ),
-                    //             ),
-                    //             // height: 800,
-                    //             // color: Colors.white,
-                    //             child: Center(
-                    //               child: Column(
-                    //                 // mainAxisAlignment:
-                    //                 //     MainAxisAlignment.spaceAround,
-                    //                 // mainAxisSize: MainAxisSize.min,
-                    //                 children: <Widget>[
-                    //                   Padding(
-                    //                     padding: const EdgeInsets.only(
-                    //                         top: 20, bottom: 20),
-                    //                     child: Text(
-                    //                       'Category List',
-                    //                       style: TextStyle(
-                    //                         color: AppColors.mainBlackColor,
-                    //                         fontSize: 20,
-                    //                         fontWeight: FontWeight.bold,
-                    //                       ),
-                    //                     ),
-                    //                   ),
-                    //                   Row(
-                    //                     mainAxisAlignment:
-                    //                     MainAxisAlignment.spaceEvenly,
-                    //                     children: [
-                    //                       ElevatedButton(
-                    //                           onPressed: () {},
-                    //                           style: ButtonStyle(
-                    //                             backgroundColor:
-                    //                             MaterialStateProperty.all(
-                    //                                 Colors.purple[50]),
-                    //                           ),
-                    //                           child: const Padding(
-                    //                             padding: EdgeInsets.only(
-                    //                                 left: 40, right: 40),
-                    //                             child: Text('Expense'),
-                    //                           )),
-                    //                       const SizedBox(width: 20),
-                    //                       ElevatedButton(
-                    //                           onPressed: () {},
-                    //                           child: const Padding(
-                    //                             padding: EdgeInsets.only(
-                    //                                 left: 40, right: 40),
-                    //                             child: Text('Income'),
-                    //                           )),
-                    //                     ],
-                    //                   ),
-                    //                   const SizedBox(height: 20),
-                    //                   Row(
-                    //                     mainAxisAlignment:
-                    //                     MainAxisAlignment.spaceBetween,
-                    //                     children: [
-                    //                       Row(
-                    //                         children: [
-                    //                           Container(
-                    //                             margin: const EdgeInsets.only(
-                    //                                 left: 40),
-                    //                             padding:
-                    //                             const EdgeInsets.all(10),
-                    //                             decoration: ShapeDecoration(
-                    //                               color:
-                    //                               const Color(0xFFFCEED3),
-                    //                               shape: RoundedRectangleBorder(
-                    //                                 borderRadius:
-                    //                                 BorderRadius.circular(
-                    //                                     14),
-                    //                               ),
-                    //                             ),
-                    //                             child: const Icon(
-                    //                               Icons.shopping_cart_sharp,
-                    //                               color: Color.fromARGB(
-                    //                                   255, 131, 90, 9),
-                    //                             ),
-                    //                           ),
-                    //                           const SizedBox(
-                    //                             width: 10,
-                    //                           ),
-                    //                           Text("Shopping",
-                    //                               style: TextStyle(
-                    //                                   color: AppColors
-                    //                                       .mainBlackColor,
-                    //                                   fontSize: 16,
-                    //                                   fontWeight:
-                    //                                   FontWeight.w500)),
-                    //                         ],
-                    //                       ),
-                    //                       IconButton(
-                    //                         onPressed: () {},
-                    //                         icon: const Icon(Icons.edit),
-                    //                       ),
-                    //                     ],
-                    //                   ),
-                    //                   const SizedBox(
-                    //                     height: 20,
-                    //                   ),
-                    //                   Row(
-                    //                     mainAxisAlignment:
-                    //                     MainAxisAlignment.spaceBetween,
-                    //                     children: [
-                    //                       Row(
-                    //                         mainAxisAlignment:
-                    //                         MainAxisAlignment.start,
-                    //                         children: [
-                    //                           Container(
-                    //                             margin: const EdgeInsets.only(
-                    //                                 left: 40),
-                    //                             padding:
-                    //                             const EdgeInsets.all(10),
-                    //                             decoration: ShapeDecoration(
-                    //                               color: Colors.red[50],
-                    //                               shape: RoundedRectangleBorder(
-                    //                                 borderRadius:
-                    //                                 BorderRadius.circular(
-                    //                                     14),
-                    //                               ),
-                    //                             ),
-                    //                             child: const Icon(
-                    //                               Icons.food_bank,
-                    //                               color: Colors.red,
-                    //                             ),
-                    //                           ),
-                    //                           const SizedBox(
-                    //                             width: 10,
-                    //                           ),
-                    //                           Text("Food",
-                    //                               style: TextStyle(
-                    //                                   color: AppColors
-                    //                                       .mainBlackColor,
-                    //                                   fontSize: 16,
-                    //                                   fontWeight:
-                    //                                   FontWeight.w500)),
-                    //                         ],
-                    //                       ),
-                    //                       IconButton(
-                    //                         onPressed: () {},
-                    //                         icon: const Icon(Icons.edit),
-                    //                       ),
-                    //                     ],
-                    //                   ),
-                    //                   const SizedBox(
-                    //                     height: 20,
-                    //                   ),
-                    //                   Row(
-                    //                     mainAxisAlignment:
-                    //                     MainAxisAlignment.spaceBetween,
-                    //                     children: [
-                    //                       Row(
-                    //                         mainAxisAlignment:
-                    //                         MainAxisAlignment.start,
-                    //                         children: [
-                    //                           Container(
-                    //                             margin: const EdgeInsets.only(
-                    //                                 left: 40),
-                    //                             padding:
-                    //                             const EdgeInsets.all(10),
-                    //                             decoration: ShapeDecoration(
-                    //                               color: Colors.blue[50],
-                    //                               shape: RoundedRectangleBorder(
-                    //                                 borderRadius:
-                    //                                 BorderRadius.circular(
-                    //                                     14),
-                    //                               ),
-                    //                             ),
-                    //                             child: const Icon(
-                    //                               Icons.directions_car,
-                    //                               color: Colors.blue,
-                    //                             ),
-                    //                           ),
-                    //                           const SizedBox(
-                    //                             width: 10,
-                    //                           ),
-                    //                           Text("Transportation",
-                    //                               style: TextStyle(
-                    //                                   color: AppColors
-                    //                                       .mainBlackColor,
-                    //                                   fontSize: 16,
-                    //                                   fontWeight:
-                    //                                   FontWeight.w500)),
-                    //                         ],
-                    //                       ),
-                    //                       IconButton(
-                    //                         onPressed: () {},
-                    //                         icon: const Icon(Icons.edit),
-                    //                       ),
-                    //                     ],
-                    //                   ),
-                    //                   const SizedBox(
-                    //                     height: 20,
-                    //                   ),
-                    //                   ElevatedButton(
-                    //                     onPressed: () {
-                    //                       //
-                    //                     },
-                    //                     style: ButtonStyle(
-                    //                       padding: MaterialStateProperty.all(
-                    //                         const EdgeInsets.symmetric(
-                    //                             horizontal: 100, vertical: 10),
-                    //                       ),
-                    //                     ),
-                    //                     child: const Padding(
-                    //                         padding: EdgeInsets.only(
-                    //                             left: 0, right: 0),
-                    //                         child: Text(
-                    //                           "Add Category",
-                    //                           style: TextStyle(
-                    //                               color: Colors.white),
-                    //                           textAlign: TextAlign.center,
-                    //                         )),
-                    //                   ),
-                    //                   SizedBox(
-                    //                     height: 35,
-                    //                   )
-                    //                 ],
-                    //               ),
-                    //             ),
-                    //           ),
-                    //         );
-                    //       },
-                    //     );
-                    //   },
-                    //   child: Container(
-                    //     margin: const EdgeInsets.all(20),
-                    //     decoration: BoxDecoration(
-                    //       borderRadius: BorderRadius.circular(20),
-                    //       border: Border.all(color: Colors.grey.shade200),
-                    //     ),
-                    //     child: Padding(
-                    //       padding: const EdgeInsets.only(left: 10, right: 10),
-                    //       child: Row(
-                    //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //         children: [
-                    //           Text(
-                    //             "Category",
-                    //             style: TextStyle(color: AppColors.textColor),
-                    //           ),
-                    //           IconButton(
-                    //             onPressed: () {},
-                    //             icon: const Icon(Icons.keyboard_arrow_down),
-                    //           ),
-                    //         ],
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
-
                     Container(
                       margin: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
@@ -434,227 +219,211 @@ class _AddInconmeState extends State<AddInconme> {
                         border: Border.all(color: Colors.grey.shade300),
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.only(left: 0, right: 0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: TextField(
-                                decoration: InputDecoration(
-                                  enabledBorder: const OutlineInputBorder(
-                                    borderSide: BorderSide.none,
-                                  ),
-                                  focusedBorder: const OutlineInputBorder(
-                                    borderSide: BorderSide.none,
-                                  ),
-                                  hintText: 'Category',
-                                  hintStyle:
-                                      TextStyle(color: AppColors.textColor),
-                                ),
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                ),
-                                // Add any additional TextField properties as needed
-                                controller: categoryController,
-                                onChanged: (value) {
-                                  setState(() {
-                                    category = categoryController.text;
-                                  });
-                                },
-                              ),
+                        padding: const EdgeInsets.only(left: 20, right: 20),
+                        child: TextField(
+                          decoration: const InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide.none,
                             ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: Colors.grey.shade300),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 0, right: 0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: TextField(
-                                decoration: InputDecoration(
-                                  enabledBorder: const OutlineInputBorder(
-                                    borderSide: BorderSide.none,
-                                  ),
-                                  focusedBorder: const OutlineInputBorder(
-                                    borderSide: BorderSide.none,
-                                  ),
-                                  hintText: 'Description',
-                                  hintStyle:
-                                      TextStyle(color: AppColors.textColor),
-                                ),
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                ),
-                                // Add any additional TextField properties as needed
-                                controller: descriptionController,
-                                onChanged: (value) {
-                                  setState(() {
-                                    description = descriptionController.text;
-                                  });
-                                },
-                              ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide.none,
                             ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: Colors.grey.shade300),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 0, right: 0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: TextField(
-                                decoration: InputDecoration(
-                                  enabledBorder: const OutlineInputBorder(
-                                    borderSide: BorderSide.none,
-                                  ),
-                                  focusedBorder: const OutlineInputBorder(
-                                    borderSide: BorderSide.none,
-                                  ),
-                                  hintText: '12 May 2021',
-                                  hintStyle:
-                                      TextStyle(color: AppColors.textColor),
-                                ),
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                ),
-                                // Add any additional TextField properties as needed
-                                controller: dateController,
-                                onChanged: (value) {
-                                  setState(() {
-                                    date = dateController.text;
-                                  });
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    // Container(
-                    //   margin: const EdgeInsets.all(20),
-                    //   decoration: BoxDecoration(
-                    //     borderRadius: BorderRadius.circular(20),
-                    //     border: Border.all(color: Colors.grey.shade200),
-                    //   ),
-                    //   child: Padding(
-                    //     padding: const EdgeInsets.only(left: 10, right: 10),
-                    //     child: Row(
-                    //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //       children: [
-                    //         Text(
-                    //           "Tuesday, 12 May 2021",
-                    //           style: TextStyle(color: AppColors.textColor),
-                    //         ),
-                    //         // const Spacer(),
-                    //         IconButton(
-                    //           onPressed: () {},
-                    //           icon: const Icon(Icons.keyboard_arrow_down),
-                    //         ),
-                    //       ],
-                    //     ),
-                    //   ),
-                    // ),
-
-                    const SizedBox(
-                      height: 50,
-                    ),
-                    Container(
-                      width: 200,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              IconButton(
-                                onPressed: () {
-                                  //add attachment
-                                  
-                                  setState(() {});
-                                },
-                                icon: const Icon(Icons.attach_file_sharp),
-                              ),
-                              Text(
-                                "Add attachment",
-                                style: TextStyle(color: AppColors.textColor),
-                              ),
-                            ],
+                            hintText: 'Category',
+                            hintStyle: TextStyle(color: AppColors.textColor),
                           ),
-                          //print attachment image
-                          Obx(() {
-                            return SizedBox();
-                          }),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 50),
-                    ElevatedButton(
-                      onPressed: () {
-                        //map the data to the model
-                        final income = IncomeModel(
-                          ammount: ammount,
-                          category: category ?? '',
-                          date: date ?? '',
-                          description: description ?? '',
-                          attachment: attachmentUrl ?? '',
-                        );
-
-                        //add the income to the database
-                        incomeController.addIncome(income);
-
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const HomeScreen(),
+                          style: const TextStyle(
+                            color: Colors.black,
                           ),
-                        );
-                      },
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
-                          selectedItem == 'Income'
-                              ? Color.fromARGB(255, 10, 135, 15)
-                              : Color.fromARGB(255, 155, 10, 10),
-                        ),
-                        padding: MaterialStateProperty.all(
-                          const EdgeInsets.symmetric(
-                              horizontal: 60, vertical: 10),
+                          controller: categoryController,
+                          onChanged: (value) {
+                            setState(() {
+                              category = value;
+                            });
+                          },
                         ),
                       ),
-                      child: const Padding(
-                          padding: EdgeInsets.only(left: 60, right: 60),
-                          child: Text(
-                            "Save",
-                            style: TextStyle(color: Colors.white),
-                          )),
                     ),
-                    const SizedBox(height: 50),
+                    Container(
+                      margin: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: Colors.grey.shade300),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 20, right: 20),
+                        child: TextField(
+                          decoration: const InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                            ),
+                            hintText: 'Description',
+                            hintStyle: TextStyle(color: AppColors.textColor),
+                          ),
+                          style: const TextStyle(
+                            color: Colors.black,
+                          ),
+                          controller: descriptionController,
+                          onChanged: (value) {
+                            setState(() {
+                              description = value;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () => _selectDate(context),
+                      child: Container(
+                        margin: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(color: Colors.grey.shade300),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 20, right: 20),
+                          child: TextField(
+                            decoration: const InputDecoration(
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                              ),
+                              hintText: 'Date',
+                              hintStyle: TextStyle(color: AppColors.textColor),
+                            ),
+                            style: const TextStyle(
+                              color: Colors.black,
+                            ),
+                            controller: dateController,
+                            onTap: () => _selectDate(context),
+                          ),
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () => _selectAttachment(context),
+                      child: Container(
+                        margin: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(color: Colors.grey.shade300),
+                        ),
+                        child: SizedBox( 
+                          height: 60, 
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 20, right: 20),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  attachment == null ? 'Attachment' : 'Image Selected',
+                                  style: const TextStyle(color: AppColors.textColor),
+                                ),
+                                Icon(Icons.attach_file, color: AppColors.textColor),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+
+
+                   Container(
+                      margin: EdgeInsets.fromLTRB(20, 20, 20, 50),
+                      width: MediaQuery.of(context).size.width,
+                      child: TextButton(
+                        onPressed: () {
+                          if (amountController.text.isNotEmpty && category.isNotEmpty && date.isNotEmpty && description.isNotEmpty) {
+                            final IncomeModel income = IncomeModel(
+                              ammount: ammount, // Sử dụng amountController.text thay vì amount
+                              category: category,
+                              description: description,
+                              date: date,
+                              attachment: attachment != null ? attachment!.path : null, // Sử dụng attachment?.path thay vì attachment
+                              isIncome : selectedItem == 'Income' ? true : false,
+                              // transactionType: selectedItem,
+                            );
+
+                            //add the income to the database
+                            incomeController.addIncome(income);
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(builder: (context) => HomeBody()),
+                              (route) => false,
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Please fill all the fields!')),
+                            );
+                          }
+                        },
+                        style: TextButton.styleFrom(
+                          backgroundColor: selectedItem == 'Income' ? const Color.fromARGB(255, 10, 135, 15) : const Color.fromARGB(255, 155, 10, 10),
+                          padding: const EdgeInsets.all(16.0),
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                          ),
+                        ),
+                        child: const Text(
+                          'Save',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
             ),
-            // ),
           ),
         ],
       ),
+
+    );
+  }
+
+  // Method to show number keyboard
+  void _showAmountKeyboard(BuildContext context) {
+    FocusScope.of(context).unfocus();
+    // FocusScope.of(context).requestFocus(FocusNode());
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return SizedBox(
+          height: 250,
+          child: Column(
+            children: [
+              Expanded(
+                child: CupertinoPicker(
+                  scrollController: FixedExtentScrollController(initialItem: ammount),
+                  itemExtent: 50,
+                  onSelectedItemChanged: (index) {
+                    setState(() {
+                      ammount = index;
+                      amountController.text = index.toString();
+                    });
+                  },
+                  children: List.generate(
+                    1000,
+                    (index) => Center(
+                      child: Text(
+                        index.toString(),
+                        style: const TextStyle(fontSize: 20),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

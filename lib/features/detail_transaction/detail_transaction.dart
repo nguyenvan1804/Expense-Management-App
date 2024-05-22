@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'dart:ffi';
 import 'dart:math';
@@ -8,281 +8,399 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import '../../core/app_routes.dart';
 import '../../utils/constants/constants.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:image_picker/image_picker.dart';
+import '../../screens_home/home_expense_body.dart';
+import 'package:intl/intl.dart';
 
-class DetailTransaction extends StatelessWidget {
+
+class DetailTransaction extends StatefulWidget {
+  final String transactionId;
+  DetailTransaction({required this.transactionId});
+  
+  @override
+  _DetailTransactionState createState() => _DetailTransactionState();
+}
+
+class _DetailTransactionState extends State<DetailTransaction> {
+  final TextEditingController amountController = TextEditingController();
+  final TextEditingController categoryController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController dateController = TextEditingController();
+
+  late bool _isIncome = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchTransactionData();
+  }
+
+  void _fetchTransactionData() async {
+    try {
+      DocumentSnapshot snapshot = await FirebaseFirestore.instance
+          .collection('Income')
+          .doc(widget.transactionId)
+          .get();
+      if (snapshot.exists) {
+        Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+        amountController.text = data['ammount'].toString() ?? '';
+        categoryController.text = data['category'] ?? '';
+        descriptionController.text = data['description'] ?? '';
+        dateController.text = data['date'] ?? '';
+        bool isIncome = data['isIncome'] ?? false;
+        _updateIsIncome(isIncome);
+      }
+    } catch (error) {
+      print('Error fetching transaction data: $error');
+    }
+  }
+
+  void _updateIsIncome(bool isIncome) {
+    if (_isIncome != isIncome) {
+      setState(() {
+        _isIncome = isIncome;
+      });
+    }
+  }
+
+  Color _getBackgroundColor() {
+    if (_isIncome) {
+      return Color.fromARGB(255, 10, 135, 15);
+    } else {
+      return Color.fromARGB(255, 155, 10, 10);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: appColor.incomeColor,
-      appBar: AppBar(
-        backgroundColor: appColor.incomeColor,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_outlined, color: Colors.white),
-          onPressed: () {
-            // Navigator.pop(context);
-          },
-        ),
-        title: Text(
-          'Detail Transaction',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-          ),
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.delete, color: Colors.white),
+        backgroundColor: _getBackgroundColor(),
+        appBar: AppBar(
+          backgroundColor: _getBackgroundColor(),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_outlined, color: Colors.white),
             onPressed: () {
-              // Navigator.pop(context);
+              Navigator.pop(context);
             },
           ),
-        ],
-        centerTitle: true,
-      ),
-      body: Container(
-        alignment: Alignment.center,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children:[
-            SizedBox(
-              height: 30.0,
+          title: Text(
+            'Detail Transaction',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18,
             ),
-
-            Text(
-              '+200.000',
-              style: TextStyle(
-                fontFamily: 'Poppins',
-                fontSize: 38.0,
-                color: Colors.white,
-                fontWeight: FontWeight.w700,
-              ),
-              textAlign: TextAlign.center,
+          ),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.delete, color: Colors.white),
+              onPressed: () {
+                _deleteTransactionAndNavigateHome(context);
+              },
             ),
-
-            Container(
-              height: 45,
-              margin: EdgeInsets.symmetric(vertical: 20.0, horizontal: 90.0),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(30.0),
+          ],
+          centerTitle: true,
+        ),
+        body: Container(
+          alignment: Alignment.center,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 30.0,
               ),
-            
-              child: Center(
-                child: Text(
-                  'Expense',
-                  style: TextStyle(
-                    color: appColor.incomeColor,
-                    fontFamily: 'Poppins',
-                    fontSize: 18.0,
-                  ),
-                  
+              TextField(
+                controller: amountController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
                 ),
+                style: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontSize: 38.0,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w700,
+                ),
+                textAlign: TextAlign.center,
               ),
-            ),
-
-            Expanded(
-              child: 
               Container(
-                width: MediaQuery.of(context).size.width,
+                height: 45,
+                margin: EdgeInsets.symmetric(
+                    vertical: 20.0, horizontal: 90.0),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(35.0),
-                    topRight: Radius.circular(35.0),
+                  borderRadius: BorderRadius.circular(30.0),
+                ),
+                child: Center(
+                  child: Text(
+                    _isIncome ? 'Income' : 'Expense',
+                    style: TextStyle(
+                      color: _getBackgroundColor(),
+                      fontFamily: 'Poppins',
+                      fontSize: 18.0,
+                    ),
                   ),
-                ),  
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.all(25.0).copyWith(left: 30.0),
-                  child: Column(
-                    
-                    children:[
-                      
-                      Row(
-                        children: [
-                          Container(
-                            width: 120,
-                            child:Column(  
-                              crossAxisAlignment: CrossAxisAlignment.start,                          
-                              children: [
-                                Text(
-                                  'Category',
-                                  style: TextStyle(
-                                    fontSize: 15.0,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                              ],
-                            ),
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  height: MediaQuery.of(context).size.height * 0.5,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(35.0),
+                      topRight: Radius.circular(35.0),
+                    ),
+                  ),
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.all(20.0),
+                    child: Column(
+                      children: [
+                        TextField(
+                          controller: categoryController,
+                          style: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontSize: 14.0,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w500,
                           ),
-
-                          Expanded(
-                              child: Text(
-                                'Salary',
-                                style: TextStyle(
-                                  fontSize: 15.0,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),                          
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(
+                          height: 30.0,
+                        ),
+                        TextField(
+                          controller: descriptionController,
+                          style: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontSize: 14.0,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w500,
                           ),
-                        ],
-                      ),
-       
-                      SizedBox(height: 10),
-
-                      Row(
-                        children: [
-                          Container(
-                            width: 120,
-                            child:Column(  
-                              crossAxisAlignment: CrossAxisAlignment.start,                          
-                              children: [
-                                Text(
-                                  'Description',
-                                  style: TextStyle(
-                                    fontSize: 15.0,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          Expanded(
-                              child: Text(
-                                'Salary of April',
-                                style: TextStyle(
-                                  fontSize: 15.0,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),                          
-                          ),
-                        ],
-                      ),
-
-                      SizedBox(height: 10),
-
-                      Row(
-                        children: [
-                          Container(
-                            width: 120,
-                            child:Column(  
-                              crossAxisAlignment: CrossAxisAlignment.start,                          
-                              children: [
-                                Text(
-                                  'Date',
-                                  style: TextStyle(
-                                    fontSize: 15.0,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          Expanded(
-                              child: Text(
-                                '10/04/2024',
-                                style: TextStyle(
-                                  fontSize: 15.0,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),                          
-                          ),
-                        ],
-                      ),
-
-                      SizedBox(height: 10),
-
-                      Row(
-                        children: [
-                          Container(
-                            width: 120,
-                            child:Column(  
-                              crossAxisAlignment: CrossAxisAlignment.start,                          
-                              children: [
-                                Text(
-                                  'Time',
-                                  style: TextStyle(
-                                    fontSize: 15.0,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          Expanded(
-                              child: Text(
-                                '12:00',
-                                style: TextStyle(
-                                  fontSize: 15.0,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),                          
-                          ),
-                        ],
-                      ),
-
-                      SizedBox(height: 10),
-                      Divider(),
-
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,                          
-                          children: [
-                            Text(
-                              'Attachment',
-                              style: TextStyle(
-                                fontSize: 15.0,
-                                fontWeight: FontWeight.w400,
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(
+                          height: 30.0,
+                        ),
+                        GestureDetector(
+                          onTap: () async {
+                            final DateTime? pickedDate = await showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime(2000),
+                              lastDate: DateTime(2101),
+                            );
+                            if (pickedDate != null) {
+                              setState(() {
+                                dateController.text = DateFormat('yyyy-MM-dd').format(pickedDate);
+                              });
+                            }
+                          },
+                          child: AbsorbPointer(
+                            child: TextFormField(
+                              controller: dateController,
+                              keyboardType: TextInputType.datetime,
+                              decoration: InputDecoration(
+                                hintText: 'Select Date',
                               ),
+                              style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 14.0,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              textAlign: TextAlign.center,
                             ),
-                          ],
-                      ),
-
-                      SizedBox(height: 10),
-
-                      Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,                          
+                          ),
+                        ),
+                        SizedBox(
+                          height: 30.0,
+                        ),
+                        SizedBox(height: 10),
+                        Divider(),
+                        GestureDetector(
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Attachment',
+                                style: TextStyle(
+                                  fontSize: 15.0,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Expanded(
-                              child: 
-                                Image.asset('assets/images/attachment.png'),
-                              )
+                              child: Image.asset('assets/images/attachment.png'),
+                            )
                           ],
                         ),
-
-                    ]
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-
-            Container(
-              color: Colors.white,
-              width: 500,
-              padding: EdgeInsets.all(15.0),
-              child: ElevatedButton(
-                onPressed: () {
-                  // code to execute when the button is pressed
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: appColor.primaryColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30), // set the button shape to a circle
+              Container(
+                color: Colors.white,
+                width: 500,
+                padding: EdgeInsets.all(15.0).copyWith(bottom: 40),
+                child: 
+                ElevatedButton(
+                  onPressed: () {
+                    _updateTransaction(context, widget.transactionId); 
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: appColor.primaryColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                  ),
+                  child: Text('Edit',
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
-                child: Text(
-                  'Edit',
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            )
-          ],
-        ),
-      ),
+                // ElevatedButton(
+                //   onPressed: () {
+                //     if (isEditing) {
+                //       _updateTransaction(context, widget.transactionId);
+                //       isEditing = false;
+                //     } else {
+                //       isEditing = true;
+                //     }
+                //   },
+                //   style: ElevatedButton.styleFrom(
+                //     backgroundColor: appColor.primaryColor,
+                //     shape: RoundedRectangleBorder(
+                //       borderRadius: BorderRadius.circular(30),
+                //     ),
+                //   ),
+                //   child: Text(isEditing ? 'Save' : 'Edit',
+                //     style: TextStyle(
+                //       fontSize: 15,
+                //       color: Colors.white,
+                //     ),
+                //   ),
+                // ),
+              )
+            ],
+          ),
+        )
     );
   }
+
+  Future<void> _updateTransaction(BuildContext context, String transactionId) async {
+    try {
+      await FirebaseFirestore.instance
+        .collection('Income')
+        .doc(transactionId)
+        .update({
+          'amount': int.parse(amountController.text),
+          'category': categoryController.text,
+          'description': descriptionController.text,
+          'date': dateController.text,
+        });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Transaction updated successfully'),
+        ),
+      );
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to update transaction: $error'),
+        ),
+      );
+    }
+  }
+
+
+  // Future<void> _updateTransaction(BuildContext context, String transactionId) async {
+  //   try {
+  //     await FirebaseFirestore.instance
+  //       .collection('Income')
+  //       .doc(transactionId)
+  //       .update({
+  //         'amount': int.parse(amountController.text),
+  //         'category': categoryController.text,
+  //         'description': descriptionController.text,
+  //         'date': dateController.text,
+  //       });
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(
+  //         content: Text('Transaction updated successfully'),
+  //       ),
+  //     );
+  //   } catch (error) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(
+  //         content: Text('Failed to update transaction: $error'),
+  //       ),
+  //     );
+  //   }
+  // }
+
+
+  Future<void> _deleteTransactionAndNavigateHome(BuildContext context) async {
+    bool confirmDelete = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Confirm Delete"),
+          content: Text("Are you sure you want to delete this transaction?"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+              child: Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+              child: Text("Delete"),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmDelete == true) {
+      try {
+        await FirebaseFirestore.instance
+            .collection('Income')
+            .doc(widget.transactionId)
+            .delete();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Transaction deleted successfully'),
+          ),
+        );
+        await Future.delayed(Duration(seconds: 1));
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => HomeBody()),
+          (route) => false,
+        );
+      } catch (error) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to delete transaction: $error'),
+          ),
+        );
+      }
+    }
+  }
+
 }

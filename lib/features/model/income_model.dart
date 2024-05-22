@@ -7,6 +7,7 @@ class IncomeModel {
   String? description;
   String? date;
   String? attachment;
+  bool? isIncome;
 
   IncomeModel(
       {this.id,
@@ -14,7 +15,10 @@ class IncomeModel {
       this.category,
       this.description,
       this.date,
-      this.attachment});
+      this.attachment,
+      this.isIncome,
+      }
+    );
 
   static IncomeModel empty() {
     return IncomeModel(
@@ -24,6 +28,7 @@ class IncomeModel {
       description: '',
       date: '',
       attachment: '',
+      isIncome: false,
     );
   }
 
@@ -34,6 +39,7 @@ class IncomeModel {
       'description': description,
       'date': date,
       'attachment': attachment,
+      'isIncome' : isIncome,
     };
   }
 
@@ -49,6 +55,7 @@ class IncomeModel {
         description: data['description'] ?? '',
         date: data['date'] ?? '',
         attachment: data['attachment'] ?? '',
+        isIncome: data['isIncome']??'',
       );
     } else {
       return IncomeModel.empty();

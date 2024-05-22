@@ -291,11 +291,11 @@ class TransacsionScreen extends StatelessWidget {
                 GestureDetector(
                   onTap: () {
                     // Điều hướng đến DetailScreen khi nhấn vào phần tử
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => DetailTransaction()),
-                    );
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //       builder: (context) => DetailTransaction()),
+                    // );
                   },
                   child: Container(
                     padding: EdgeInsets.all(15),
@@ -370,11 +370,11 @@ class TransacsionScreen extends StatelessWidget {
                 GestureDetector(
                   onTap: () {
                     // Điều hướng đến DetailScreen khi nhấn vào phần tử
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => DetailTransaction()),
-                    );
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //       builder: (context) => DetailTransaction()),
+                    // );
                   },
                   child: Container(
                     padding: EdgeInsets.all(15),
@@ -455,11 +455,11 @@ class TransacsionScreen extends StatelessWidget {
                 GestureDetector(
                   onTap: () {
                     // Điều hướng đến DetailScreen khi nhấn vào phần tử
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => DetailTransaction()),
-                    );
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //       builder: (context) => DetailTransaction()),
+                    // );
                   },
                   child: Container(
                     // height: 80,

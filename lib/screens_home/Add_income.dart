@@ -1,20 +1,21 @@
+import 'dart:io' if (dart.library.html) 'dart:html' as file;
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:login_signup_project/Widget/bottom_sheet.dart';
-import 'package:login_signup_project/common/widgets/images/t_circular_images.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:login_signup_project/features/Controller/income_controller.dart';
 import 'package:login_signup_project/features/model/income_model.dart';
-import 'package:login_signup_project/utils/constants/image_strings.dart';
-import 'package:login_signup_project/utils/shimmer/shimmer.dart';
-import 'home_screen.dart';
+import 'package:login_signup_project/screens_home/home_expense_body.dart';
 import 'package:login_signup_project/utils/constants/color_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+
+import '../common/widgets/images/t_circular_images.dart';
+import '../features/personalization/user_controller.dart';
+import '../utils/constants/image_strings.dart';
+import '../utils/shimmer/shimmer.dart';
 
 class AddInconme extends StatefulWidget {
   const AddInconme({super.key});
@@ -24,6 +25,9 @@ class AddInconme extends StatefulWidget {
 }
 
 class _AddInconmeState extends State<AddInconme> {
+
+  File ? _selectedImage;
+
   String selectedItem = 'Income';
   final IncomeController incomeController = Get.put(IncomeController());
 
@@ -40,6 +44,7 @@ class _AddInconmeState extends State<AddInconme> {
 
   @override
   Widget build(BuildContext context) {
+    final controller = UserController.instance;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -126,7 +131,6 @@ class _AddInconmeState extends State<AddInconme> {
                       ),
                       TextField(
                         controller: ammountController,
-
                         decoration: InputDecoration(
                           enabledBorder: const OutlineInputBorder(
                             borderSide: BorderSide.none,
@@ -426,7 +430,6 @@ class _AddInconmeState extends State<AddInconme> {
                     //     ),
                     //   ),
                     // ),
-
                     Container(
                       margin: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
@@ -593,16 +596,11 @@ class _AddInconmeState extends State<AddInconme> {
                                 },
                                 icon: const Icon(Icons.attach_file_sharp),
                               ),
-                              Text(
-                                "Add attachment",
-                                style: TextStyle(color: AppColors.textColor),
-                              ),
+                              TextButton(onPressed: () { _pickImageFromGallery(); }, child: const Text('Add attachment')),
                             ],
                           ),
                           //print attachment image
-                          Obx(() {
-                            return SizedBox();
-                          }),
+                          _selectedImage != null ? Image.file(_selectedImage!) : const Text("Please select bill image")
                         ],
                       ),
                     ),
@@ -624,7 +622,7 @@ class _AddInconmeState extends State<AddInconme> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const HomeScreen(),
+                            builder: (context) => const HomeBody(),
                           ),
                         );
                       },
@@ -656,5 +654,13 @@ class _AddInconmeState extends State<AddInconme> {
         ],
       ),
     );
+  }
+
+  Future _pickImageFromGallery() async{
+    final returnedImage = await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      _selectedImage = File(returnedImage!.path);
+    });
   }
 }

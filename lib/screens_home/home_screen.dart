@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:login_signup_project/features/personalization/screens/settings/settings.dart';
-import '../features/personalization/screens/profile/profile.dart';
 import 'Add_income.dart';
 import 'StatisticScreen.dart';
 import 'TransacsionScreen.dart';

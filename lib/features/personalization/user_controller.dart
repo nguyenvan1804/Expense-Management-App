@@ -188,4 +188,29 @@ class UserController extends GetxController {
       imageUploading.value = false;
     }
   }
+
+  // /// Upload Attachment Image
+  // uploadAttachmentPicture() async {
+  //   try {
+  //     final image = await ImagePicker().pickImage(source: ImageSource.gallery, imageQuality: 70, maxHeight: 512, maxWidth: 512);
+  //     if (image != null) {
+  //
+  //       imageUploading.value = true;
+  //       // Upload Image
+  //       final imageUrl = await userRepository.uploadImage('Attachmentt/Images', image);
+  //
+  //       // Update Attachment Image Record
+  //       Map<String, dynamic> json = {'AttachmentImages': imageUrl};
+  //       await userRepository.updateSingleField(json);
+  //       user.value.attachmentImage = imageUrl;
+  //       user.refresh();
+  //
+  //       TLoaders.successSnackBar(title: 'Congratulations', message: 'Your Attachment Image has been updated!');
+  //     }
+  //   } catch (e) {
+  //     TLoaders.errorSnackBar(title: 'OhSnap', message: 'Something went wrong: $e');
+  //   } finally{
+  //     imageUploading.value = false;
+  //   }
+  // }
 }

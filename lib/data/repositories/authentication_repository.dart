@@ -185,40 +185,40 @@ class AuthenticationRepository extends GetxController {
 
 /*------------------------------./end Federated identify & social sign-in------------------------------*/
 
-    /// [Logout User]-Valid for any authentication
-    Future<void> logout() async {
-      try {
-        await GoogleSignIn().signOut();
-        await FirebaseAuth.instance.signOut();
-        Get.offAll(() => const LoginScreen());
-      } on FirebaseAuthException catch (e) {
-        throw TFirebaseAuthException(e.code).message;
-      } on FirebaseException catch (e) {
-        throw TFirebaseException(e.code).message;
-      } on FormatException catch (_) {
-        throw const TFormatException();
-      } on PlatformException catch (e) {
-        throw TPlatformException(e.code).message;
-      } catch (e) {
-        throw "Something went wrong. Please try again";
-      }
+  /// [Logout User]-Valid for any authentication
+  Future<void> logout() async {
+    try {
+      await GoogleSignIn().signOut();
+      await FirebaseAuth.instance.signOut();
+      Get.offAll(() => const LoginScreen());
+    } on FirebaseAuthException catch (e) {
+      throw TFirebaseAuthException(e.code).message;
+    } on FirebaseException catch (e) {
+      throw TFirebaseException(e.code).message;
+    } on FormatException catch (_) {
+      throw const TFormatException();
+    } on PlatformException catch (e) {
+      throw TPlatformException(e.code).message;
+    } catch (e) {
+      throw "Something went wrong. Please try again";
     }
+  }
 
-    /// DELETE USER Remove user Auth and Firestore Account.
-    Future<void> deleteAccount() async {
-      try {
-        await UserRepository.instance.removeUserRecord(_auth.currentUser!.uid);
-        await _auth.currentUser?.delete();
-      } on FirebaseAuthException catch (e) {
-        throw TFirebaseAuthException(e.code).message;
-      } on FirebaseException catch (e) {
-        throw TFirebaseException(e.code).message;
-      } on FormatException catch (_) {
-        throw const TFormatException();
-      } on PlatformException catch (e) {
-        throw TPlatformException(e.code).message;
-      } catch (e) {
-        throw 'Something went wrong. Please try again';
-      }
+  /// DELETE USER Remove user Auth and Firestore Account.
+  Future<void> deleteAccount() async {
+    try {
+      await UserRepository.instance.removeUserRecord(_auth.currentUser!.uid);
+      await _auth.currentUser?.delete();
+    } on FirebaseAuthException catch (e) {
+      throw TFirebaseAuthException(e.code).message;
+    } on FirebaseException catch (e) {
+      throw TFirebaseException(e.code).message;
+    } on FormatException catch (_) {
+      throw const TFormatException();
+    } on PlatformException catch (e) {
+      throw TPlatformException(e.code).message;
+    } catch (e) {
+      throw 'Something went wrong. Please try again';
     }
+  }
 }

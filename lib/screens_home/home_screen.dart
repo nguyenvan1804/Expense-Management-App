@@ -26,7 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   List<Widget> _buidScreen() {
     return [
-      const HomeBody(),
+      HomeBody(),
       const TransacsionScreen(),
       const AddInconme(),
       const StatisticScreen(),

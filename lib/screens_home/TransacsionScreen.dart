@@ -1,5 +1,10 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:login_signup_project/features/Controller/transaction_controller.dart';
+import 'package:login_signup_project/features/model/transaction_model.dart';
+
 import '../utils/constants/color_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +17,8 @@ class TransacsionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final incomeController = Get.put(IncomeController());
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -23,13 +30,9 @@ class TransacsionScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
+                SizedBox(
                   height: 40,
-                  width: 80,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      color: Colors.white30,
-                      border: Border.all(color: Colors.grey)),
+                  width: 180,
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
@@ -39,7 +42,7 @@ class TransacsionScreen extends StatelessWidget {
                         size: 15,
                       ),
                       Text(
-                        "Month",
+                        "Transaction",
                         style: TextStyle(
                           fontSize: 15,
                         ),
@@ -277,791 +280,233 @@ class TransacsionScreen extends StatelessWidget {
                 Container(
                   margin: EdgeInsets.only(left: 20),
                   child: Text(
-                    "Today",
+                    "Income",
                     textAlign: TextAlign.start,
                     style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
-                    ),
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.green),
                   ),
                 ),
-                SizedBox(
-                  height: 20,
+                SingleChildScrollView(
+                  child: Obx(() {
+                    return incomeController.isLoading.value == false
+                        ? ListView.builder(
+                            // physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: incomeController.incomeList.length,
+                            itemBuilder: (context, index) {
+                              final TransactionModel income =
+                                  incomeController.incomeList[index];
+                              return GestureDetector(
+                                onTap: () {
+                                  // Điều hướng đến DetailScreen khi nhấn vào phần tử
+                                  // Navigator.push(
+                                  //   context,
+                                  //   MaterialPageRoute(
+                                  //       builder: (context) =>
+                                  //           DetailTransaction()),
+                                  // );
+                                },
+                                child: Container(
+                                  margin: const EdgeInsets.only(bottom: 15),
+                                  // height: 80,
+                                  padding: EdgeInsets.all(15),
+                                  decoration: BoxDecoration(
+                                      color: Colors.grey[100],
+                                      borderRadius: BorderRadius.circular(20)),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(
+                                        width: 50,
+                                        height: 50,
+                                        padding: const EdgeInsets.all(10),
+                                        decoration: ShapeDecoration(
+                                          color: Colors.amber,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(14),
+                                          ),
+                                        ),
+                                        child: Icon(
+                                          Icons.shopping_cart_sharp,
+                                          color: AppColors.iconColor,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 15,
+                                      ),
+                                      Expanded(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(income.category ?? "",
+                                                style: TextStyle(
+                                                    color: AppColors
+                                                        .mainBlackColor,
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.w500)),
+                                            const SizedBox(height: 5),
+                                            Text(income.description ?? "",
+                                                style: TextStyle(
+                                                    color: AppColors.paraColor,
+                                                    fontSize: 13,
+                                                    fontWeight:
+                                                        FontWeight.w500)),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Column(
+                                        children: [
+                                          Text("\$${income.amount}",
+                                              style: TextStyle(
+                                                  color: Colors.green,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600)),
+                                          const SizedBox(height: 10),
+                                          Text(income.date ?? "",
+                                              style: TextStyle(
+                                                  color: AppColors.paraColor,
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.w500)),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          )
+                        : const Center(child: CircularProgressIndicator());
+                  }),
                 ),
-                GestureDetector(
-                  onTap: () {
-                    // Điều hướng đến DetailScreen khi nhấn vào phần tử
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => DetailTransaction()),
-                    );
-                  },
-                  child: Container(
-                    padding: EdgeInsets.all(15),
-                    decoration: BoxDecoration(
-                        color: Colors.grey[100],
-                        borderRadius: BorderRadius.circular(20)),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          width: 50,
-                          height: 50,
-                          padding: const EdgeInsets.all(10),
-                          decoration: ShapeDecoration(
-                            color: Colors.amber,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14),
-                            ),
-                          ),
-                          child: Icon(
-                            Icons.shopping_cart_sharp,
-                            color: AppColors.iconColor,
-                          ),
-                        ),
-                        SizedBox(
-                          width: 15,
-                        ),
-                        Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("Shopping",
-                                  style: TextStyle(
-                                      color: AppColors.mainBlackColor,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500)),
-                              const SizedBox(height: 5),
-                              Text("Buy some grocery",
-                                  style: TextStyle(
-                                      color: AppColors.paraColor,
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w500)),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Column(
-                          children: [
-                            const Text("- \$120",
-                                style: TextStyle(
-                                    color: Colors.red,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600)),
-                            const SizedBox(height: 10),
-                            Text("10:00 AM",
-                                style: TextStyle(
-                                    color: AppColors.paraColor,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w500)),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    // Điều hướng đến DetailScreen khi nhấn vào phần tử
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => DetailTransaction()),
-                    );
-                  },
-                  child: Container(
-                    padding: EdgeInsets.all(15),
-                    decoration: BoxDecoration(
-                        color: Colors.grey[100],
-                        borderRadius: BorderRadius.circular(20)),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          width: 50,
-                          height: 50,
-                          padding: const EdgeInsets.all(10),
-                          decoration: ShapeDecoration(
-                            color: Colors.red[200],
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14),
-                            ),
-                          ),
-                          child:
-                              Image.asset('assets/icons/transaction/food.png'),
-                        ),
-                        SizedBox(
-                          width: 15,
-                        ),
-                        Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("Food",
-                                  style: TextStyle(
-                                      color: AppColors.mainBlackColor,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500)),
-                              const SizedBox(height: 5),
-                              Text("Buy a ramen",
-                                  style: TextStyle(
-                                      color: AppColors.paraColor,
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w500)),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Column(
-                          children: [
-                            const Text("- \$120",
-                                style: TextStyle(
-                                    color: Colors.red,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600)),
-                            const SizedBox(height: 10),
-                            Text("10:00 AM",
-                                style: TextStyle(
-                                    color: AppColors.paraColor,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w500)),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                ),
+
                 const SizedBox(
                   height: 20,
                 ),
                 Container(
                   margin: EdgeInsets.only(left: 20),
                   child: Text(
-                    "Yesterday",
-                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                    "Expenses",
+                    style: TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.red),
                   ),
                 ),
-                SizedBox(height: 20),
-                GestureDetector(
-                  onTap: () {
-                    // Điều hướng đến DetailScreen khi nhấn vào phần tử
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => DetailTransaction()),
-                    );
-                  },
-                  child: Container(
-                    // height: 80,
-                    padding: EdgeInsets.all(15),
-                    decoration: BoxDecoration(
-                        color: Colors.grey[100],
-                        borderRadius: BorderRadius.circular(20)),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          width: 50,
-                          height: 50,
-                          padding: const EdgeInsets.all(10),
-                          decoration: ShapeDecoration(
-                            color: Colors.green[200],
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14),
-                            ),
-                          ),
-                          child:
-                              Image.asset('assets/icons/transaction/money.png'),
-                          // Icon(
-                          //   Icons.shopping_cart_sharp,
-                          //   color: AppColors.iconColor,
-                          // ),
-                        ),
-                        SizedBox(
-                          width: 15,
-                        ),
-                        Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("Salary",
-                                  style: TextStyle(
-                                      color: AppColors.mainBlackColor,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500)),
-                              const SizedBox(height: 5),
-                              Text("Salary for July",
-                                  style: TextStyle(
-                                      color: AppColors.paraColor,
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w500)),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Column(
-                          children: [
-                            const Text(
-                              "+ \$120",
-                              style: TextStyle(
-                                  color: Colors.red,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                            const SizedBox(height: 10),
-                            Text("10:00 AM",
-                                style: TextStyle(
-                                    color: AppColors.paraColor,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w500)),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
+                //print all expense
+                SingleChildScrollView(
+                  child: Obx(() {
+                    return incomeController.isLoading.value == false
+                        ? ListView.builder(
+                            // physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: incomeController.expenseList.length,
+                            itemBuilder: (context, index) {
+                              final TransactionModel expense =
+                                  incomeController.expenseList[index];
+                              return GestureDetector(
+                                onTap: () {
+                                  // Điều hướng đến DetailScreen khi nhấn vào phần tử
+                                  // Navigator.push(
+                                  //   context,
+                                  //   MaterialPageRoute(
+                                  //       builder: (context) =>
+                                  //           DetailTransaction()),
+                                  // );
+                                },
+                                child: Container(
+                                  margin: const EdgeInsets.only(bottom: 15),
+                                  // height: 80,
+                                  padding: EdgeInsets.all(15),
+                                  decoration: BoxDecoration(
+                                      color: Colors.grey[100],
+                                      borderRadius: BorderRadius.circular(20)),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(
+                                        width: 50,
+                                        height: 50,
+                                        padding: const EdgeInsets.all(10),
+                                        decoration: ShapeDecoration(
+                                          color: Colors.amber,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(14),
+                                          ),
+                                        ),
+                                        child: Icon(
+                                          Icons.shopping_cart_sharp,
+                                          color: AppColors.iconColor,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 15,
+                                      ),
+                                      Expanded(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(expense.category ?? "",
+                                                style: TextStyle(
+                                                    color: AppColors
+                                                        .mainBlackColor,
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.w500)),
+                                            const SizedBox(height: 5),
+                                            Text(expense.description ?? "",
+                                                style: TextStyle(
+                                                    color: AppColors.paraColor,
+                                                    fontSize: 13,
+                                                    fontWeight:
+                                                        FontWeight.w500)),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Column(
+                                        children: [
+                                          Text("- \$${expense.amount}",
+                                              style: TextStyle(
+                                                  color: Colors.red,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600)),
+                                          const SizedBox(height: 10),
+                                          Text(expense.date ?? "",
+                                              style: TextStyle(
+                                                  color: AppColors.paraColor,
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.w500)),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          )
+                        : const Center(child: CircularProgressIndicator());
+                  }),
                 ),
               ],
             ),
-            // child: Column(
-            //   crossAxisAlignment: CrossAxisAlignment.start,
-            //   children: [
-            //     Container(
-            //       margin: EdgeInsets.only(left: 20),
-            //       child: Text(
-            //         "Today",
-            //         textAlign: TextAlign.start,
-            //         style: TextStyle(
-            //           fontSize: 25,
-            //           fontWeight: FontWeight.bold,
-            //         ),
-            //       ),
-            //     ),
-            //     SizedBox(
-            //       height: 20,
-            //     ),
-            //     Row(
-            //       children: [
-            //         Expanded(
-            //           child: Container(
-            //             margin: const EdgeInsets.symmetric(horizontal: 25),
-            //             padding: EdgeInsets.all(10),
-            //             decoration: BoxDecoration(
-            //                 color: Colors.grey[100],
-            //                 borderRadius: BorderRadius.circular(20)),
-            //             child: Row(
-            //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //               children: [
-            //                 Container(
-            //                   margin: EdgeInsets.only(left: 10),
-            //                   child: Row(
-            //                     children: [
-            //                       Container(
-            //                         padding: EdgeInsets.all(15),
-            //                         height: 60,
-            //                         child: Image.asset(
-            //                             'assets/icons/transaction/shopping.png'),
-            //                         decoration: BoxDecoration(
-            //                             color: Colors.amber,
-            //                             shape: BoxShape.rectangle,
-            //                             borderRadius: BorderRadius.circular(10)),
-            //                       ),
-            //                       Padding(
-            //                         padding: const EdgeInsets.only(left: 10),
-            //                         child: Container(
-            //                           child: Column(
-            //                             mainAxisAlignment:
-            //                                 MainAxisAlignment.spaceBetween,
-            //                             crossAxisAlignment:
-            //                                 CrossAxisAlignment.start,
-            //                             children: [
-            //                               Container(
-            //                                 padding: EdgeInsets.only(bottom: 10),
-            //                                 child: Text("Shopping",
-            //                                     style: TextStyle(
-            //                                         color:
-            //                                             AppColors.mainBlackColor,
-            //                                         fontSize: 16,
-            //                                         fontWeight: FontWeight.w500)),
-            //                               ),
-            //                               Container(
-            //                                 padding: EdgeInsets.only(top: 10),
-            //                                 child: Text("Buy some grocery",
-            //                                     style: TextStyle(
-            //                                         color: AppColors.paraColor,
-            //                                         fontSize: 13,
-            //                                         fontWeight: FontWeight.w500)),
-            //                               ),
-            //                             ],
-            //                           ),
-            //                         ),
-            //                       )
-            //                     ],
-            //                   ),
-            //                 ),
-            //                 Container(
-            //                   margin: EdgeInsets.all(10),
-            //                   child: Column(
-            //                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //                     children: [
-            //                       Container(
-            //                         padding: EdgeInsets.only(bottom: 10),
-            //                         child: Text("- \$120",
-            //                             style: TextStyle(
-            //                                 color: Colors.red,
-            //                                 fontSize: 16,
-            //                                 fontWeight: FontWeight.w600)),
-            //                       ),
-            //                       Container(
-            //                         padding: EdgeInsets.only(top: 10),
-            //                         child: Text("10:00 AM",
-            //                             style: TextStyle(
-            //                                 color: AppColors.paraColor,
-            //                                 fontSize: 13,
-            //                                 fontWeight: FontWeight.w500)),
-            //                       ),
-            //                     ],
-            //                   ),
-            //                 ),
-            //               ],
-            //             ),
-            //           ),
-            //         ),
-            //       ],
-            //     ),
-            //     // Container(
-            //     //   margin: const EdgeInsets.symmetric(horizontal: 25),
-            //     //   padding: EdgeInsets.all(10),
-            //     //   decoration: BoxDecoration(
-            //     //       color: Colors.grey[100],
-            //     //       borderRadius: BorderRadius.circular(20)),
-            //     //   child: Row(
-            //     //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //     //     children: [
-            //     //       Container(
-            //     //         margin: EdgeInsets.only(left: 10),
-            //     //         child: Row(
-            //     //           children: [
-            //     //             Container(
-            //     //               padding: EdgeInsets.all(15),
-            //     //               height: 60,
-            //     //               child: Image.asset(
-            //     //                   'assets/icons/transaction/shopping.png'),
-            //     //               decoration: BoxDecoration(
-            //     //                   color: Colors.amber,
-            //     //                   shape: BoxShape.rectangle,
-            //     //                   borderRadius: BorderRadius.circular(10)),
-            //     //             ),
-            //     //             Padding(
-            //     //               padding: const EdgeInsets.only(left: 10),
-            //     //               child: Container(
-            //     //                 child: Column(
-            //     //                   mainAxisAlignment:
-            //     //                       MainAxisAlignment.spaceBetween,
-            //     //                   crossAxisAlignment: CrossAxisAlignment.start,
-            //     //                   children: [
-            //     //                     Container(
-            //     //                       padding: EdgeInsets.only(bottom: 10),
-            //     //                       child: Text("Shopping",
-            //     //                           style: TextStyle(
-            //     //                               color: AppColors.mainBlackColor,
-            //     //                               fontSize: 16,
-            //     //                               fontWeight: FontWeight.w500)),
-            //     //                     ),
-            //     //                     Container(
-            //     //                       padding: EdgeInsets.only(top: 10),
-            //     //                       child: Text("Buy some grocery",
-            //     //                           style: TextStyle(
-            //     //                               color: AppColors.paraColor,
-            //     //                               fontSize: 13,
-            //     //                               fontWeight: FontWeight.w500)),
-            //     //                     ),
-            //     //                   ],
-            //     //                 ),
-            //     //               ),
-            //     //             )
-            //     //           ],
-            //     //         ),
-            //     //       ),
-            //     //       Container(
-            //     //         margin: EdgeInsets.all(10),
-            //     //         child: Column(
-            //     //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //     //           children: [
-            //     //             Container(
-            //     //               padding: EdgeInsets.only(bottom: 10),
-            //     //               child: Text("- \$120",
-            //     //                   style: TextStyle(
-            //     //                       color: Colors.red,
-            //     //                       fontSize: 16,
-            //     //                       fontWeight: FontWeight.w600)),
-            //     //             ),
-            //     //             Container(
-            //     //               padding: EdgeInsets.only(top: 10),
-            //     //               child: Text("10:00 AM",
-            //     //                   style: TextStyle(
-            //     //                       color: AppColors.paraColor,
-            //     //                       fontSize: 13,
-            //     //                       fontWeight: FontWeight.w500)),
-            //     //             ),
-            //     //           ],
-            //     //         ),
-            //     //       ),
-            //     //     ],
-            //     //   ),
-            //     // ),
-            //     // SizedBox(height: 20),
-            //     Container(
-            //       margin: const EdgeInsets.symmetric(horizontal: 25),
-            //       padding: EdgeInsets.all(10),
-            //       decoration: BoxDecoration(
-            //           color: Colors.grey[100],
-            //           borderRadius: BorderRadius.circular(20)),
-            //       child: Row(
-            //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //         children: [
-            //           Container(
-            //             margin: EdgeInsets.only(left: 10),
-            //             child: Row(
-            //               children: [
-            //                 Container(
-            //                   padding: EdgeInsets.all(15),
-            //                   height: 60,
-            //                   child: Image.asset(
-            //                       'assets/icons/transaction/subcription.png'),
-            //                   decoration: BoxDecoration(
-            //                       color: Colors.purple[100],
-            //                       shape: BoxShape.rectangle,
-            //                       borderRadius: BorderRadius.circular(10)),
-            //                 ),
-            //                 Padding(
-            //                   padding: const EdgeInsets.only(left: 10),
-            //                   child: Container(
-            //                     child: Column(
-            //                       mainAxisAlignment:
-            //                           MainAxisAlignment.spaceBetween,
-            //                       crossAxisAlignment: CrossAxisAlignment.start,
-            //                       children: [
-            //                         Container(
-            //                           padding: EdgeInsets.only(bottom: 10),
-            //                           child: Text("Subscription",
-            //                               style: TextStyle(
-            //                                   color: AppColors.mainBlackColor,
-            //                                   fontSize: 16,
-            //                                   fontWeight: FontWeight.w500)),
-            //                         ),
-            //                         Container(
-            //                           padding: EdgeInsets.only(top: 10),
-            //                           child: Text("Disney + Annual...",
-            //                               style: TextStyle(
-            //                                   color: AppColors.paraColor,
-            //                                   fontSize: 13,
-            //                                   fontWeight: FontWeight.w500)),
-            //                         ),
-            //                       ],
-            //                     ),
-            //                   ),
-            //                 )
-            //               ],
-            //             ),
-            //           ),
-            //           Container(
-            //             margin: EdgeInsets.all(10),
-            //             child: Column(
-            //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //               children: [
-            //                 Container(
-            //                   padding: EdgeInsets.only(bottom: 10),
-            //                   child: Text("- \$80",
-            //                       style: TextStyle(
-            //                           color: Colors.red,
-            //                           fontSize: 16,
-            //                           fontWeight: FontWeight.w600)),
-            //                 ),
-            //                 Container(
-            //                   padding: EdgeInsets.only(top: 10),
-            //                   child: Text("03:30 PM",
-            //                       style: TextStyle(
-            //                           color: AppColors.paraColor,
-            //                           fontSize: 13,
-            //                           fontWeight: FontWeight.w500)),
-            //                 ),
-            //               ],
-            //             ),
-            //           ),
-            //         ],
-            //       ),
-            //     ),
-            //     SizedBox(height: 20),
-            //     Container(
-            //       margin: const EdgeInsets.symmetric(horizontal: 25),
-            //       padding: EdgeInsets.all(10),
-            //       decoration: BoxDecoration(
-            //           color: Colors.grey[100],
-            //           borderRadius: BorderRadius.circular(20)),
-            //       child: Row(
-            //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //         children: [
-            //           Container(
-            //             margin: EdgeInsets.only(left: 10),
-            //             child: Row(
-            //               children: [
-            //                 Container(
-            //                   padding: EdgeInsets.all(15),
-            //                   height: 60,
-            //                   child: Image.asset(
-            //                       'assets/icons/transaction/food.png'),
-            //                   decoration: BoxDecoration(
-            //                       color: Colors.red[200],
-            //                       shape: BoxShape.rectangle,
-            //                       borderRadius: BorderRadius.circular(10)),
-            //                 ),
-            //                 Padding(
-            //                   padding: const EdgeInsets.only(left: 10),
-            //                   child: Container(
-            //                     child: Column(
-            //                       mainAxisAlignment:
-            //                           MainAxisAlignment.spaceBetween,
-            //                       crossAxisAlignment: CrossAxisAlignment.start,
-            //                       children: [
-            //                         Container(
-            //                           padding: EdgeInsets.only(bottom: 10),
-            //                           child: Text("Food",
-            //                               style: TextStyle(
-            //                                   color: AppColors.mainBlackColor,
-            //                                   fontSize: 16,
-            //                                   fontWeight: FontWeight.w500)),
-            //                         ),
-            //                         Container(
-            //                           padding: EdgeInsets.only(top: 10),
-            //                           child: Text("Buy a ramen",
-            //                               style: TextStyle(
-            //                                   color: AppColors.paraColor,
-            //                                   fontSize: 13,
-            //                                   fontWeight: FontWeight.w500)),
-            //                         ),
-            //                       ],
-            //                     ),
-            //                   ),
-            //                 )
-            //               ],
-            //             ),
-            //           ),
-            //           Container(
-            //             margin: EdgeInsets.all(10),
-            //             child: Column(
-            //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //               children: [
-            //                 Container(
-            //                   padding: EdgeInsets.only(bottom: 10),
-            //                   child: Text("- \$32",
-            //                       style: TextStyle(
-            //                           color: Colors.red,
-            //                           fontSize: 16,
-            //                           fontWeight: FontWeight.w600)),
-            //                 ),
-            //                 Container(
-            //                   padding: EdgeInsets.only(top: 10),
-            //                   child: Text("07:30 PM",
-            //                       style: TextStyle(
-            //                           color: AppColors.paraColor,
-            //                           fontSize: 13,
-            //                           fontWeight: FontWeight.w500)),
-            //                 ),
-            //               ],
-            //             ),
-            //           ),
-            //         ],
-            //       ),
-            //     ),
-            //     const SizedBox(
-            //       height: 20,
-            //     ),
-            //     Container(
-            //       margin: EdgeInsets.only(left: 20),
-            //       child: Text(
-            //         "Yesterday",
-            //         style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-            //       ),
-            //     ),
-            //     SizedBox(height: 20),
-            //     Container(
-            //       margin: const EdgeInsets.symmetric(horizontal: 25),
-            //       padding: EdgeInsets.all(10),
-            //       decoration: BoxDecoration(
-            //           color: Colors.grey[100],
-            //           borderRadius: BorderRadius.circular(20)),
-            //       child: Row(
-            //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //         children: [
-            //           Container(
-            //             margin: EdgeInsets.only(left: 10),
-            //             child: Row(
-            //               children: [
-            //                 Container(
-            //                   padding: EdgeInsets.all(15),
-            //                   height: 60,
-            //                   child: Image.asset(
-            //                       'assets/icons/transaction/money.png'),
-            //                   decoration: BoxDecoration(
-            //                       color: Colors.green[200],
-            //                       shape: BoxShape.rectangle,
-            //                       borderRadius: BorderRadius.circular(10)),
-            //                 ),
-            //                 Padding(
-            //                   padding: const EdgeInsets.only(left: 10),
-            //                   child: Container(
-            //                     child: Column(
-            //                       mainAxisAlignment:
-            //                           MainAxisAlignment.spaceBetween,
-            //                       crossAxisAlignment: CrossAxisAlignment.start,
-            //                       children: [
-            //                         Container(
-            //                           padding: EdgeInsets.only(bottom: 10),
-            //                           child: Text("Salary",
-            //                               style: TextStyle(
-            //                                   color: AppColors.mainBlackColor,
-            //                                   fontSize: 16,
-            //                                   fontWeight: FontWeight.w500)),
-            //                         ),
-            //                         Container(
-            //                           padding: EdgeInsets.only(top: 10),
-            //                           child: Text("Salary for July",
-            //                               style: TextStyle(
-            //                                   color: AppColors.paraColor,
-            //                                   fontSize: 13,
-            //                                   fontWeight: FontWeight.w500)),
-            //                         ),
-            //                       ],
-            //                     ),
-            //                   ),
-            //                 )
-            //               ],
-            //             ),
-            //           ),
-            //           Container(
-            //             margin: EdgeInsets.all(10),
-            //             child: Column(
-            //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //               children: [
-            //                 Container(
-            //                   padding: EdgeInsets.only(bottom: 10),
-            //                   child: Text("+ \$5000",
-            //                       style: TextStyle(
-            //                           color: Colors.green,
-            //                           fontSize: 16,
-            //                           fontWeight: FontWeight.w600)),
-            //                 ),
-            //                 Container(
-            //                   padding: EdgeInsets.only(top: 10),
-            //                   child: Text("04:30 PM",
-            //                       style: TextStyle(
-            //                           color: AppColors.paraColor,
-            //                           fontSize: 13,
-            //                           fontWeight: FontWeight.w500)),
-            //                 ),
-            //               ],
-            //             ),
-            //           ),
-            //         ],
-            //       ),
-            //     ),
-            //     SizedBox(height: 20),
-            //     Container(
-            //       margin: const EdgeInsets.symmetric(horizontal: 25),
-            //       padding: EdgeInsets.all(10),
-            //       decoration: BoxDecoration(
-            //           color: Colors.grey[100],
-            //           borderRadius: BorderRadius.circular(20)),
-            //       child: Row(
-            //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //         children: [
-            //           Container(
-            //             margin: EdgeInsets.only(left: 10),
-            //             child: Row(
-            //               children: [
-            //                 Container(
-            //                   padding: EdgeInsets.all(15),
-            //                   height: 60,
-            //                   child: Image.asset(
-            //                       'assets/icons/transaction/transport.png'),
-            //                   decoration: BoxDecoration(
-            //                       color: Colors.blue[400],
-            //                       shape: BoxShape.rectangle,
-            //                       borderRadius: BorderRadius.circular(10)),
-            //                 ),
-            //                 Padding(
-            //                   padding: const EdgeInsets.only(left: 10),
-            //                   child: Container(
-            //                     child: Column(
-            //                       mainAxisAlignment:
-            //                           MainAxisAlignment.spaceBetween,
-            //                       crossAxisAlignment: CrossAxisAlignment.start,
-            //                       children: [
-            //                         Container(
-            //                           padding: EdgeInsets.only(bottom: 10),
-            //                           child: Text("Transportation",
-            //                               style: TextStyle(
-            //                                   color: AppColors.mainBlackColor,
-            //                                   fontSize: 16,
-            //                                   fontWeight: FontWeight.w500)),
-            //                         ),
-            //                         Container(
-            //                           padding: EdgeInsets.only(top: 10),
-            //                           child: Text("Charging Tesla",
-            //                               style: TextStyle(
-            //                                   color: AppColors.paraColor,
-            //                                   fontSize: 13,
-            //                                   fontWeight: FontWeight.w500)),
-            //                         ),
-            //                       ],
-            //                     ),
-            //                   ),
-            //                 )
-            //               ],
-            //             ),
-            //           ),
-            //           Container(
-            //             margin: EdgeInsets.all(10),
-            //             child: Column(
-            //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //               children: [
-            //                 Container(
-            //                   padding: EdgeInsets.only(bottom: 10),
-            //                   child: Text("- \$18",
-            //                       style: TextStyle(
-            //                           color: Colors.red,
-            //                           fontSize: 16,
-            //                           fontWeight: FontWeight.w600)),
-            //                 ),
-            //                 Container(
-            //                   padding: EdgeInsets.only(top: 10),
-            //                   child: Text("08:30 PM",
-            //                       style: TextStyle(
-            //                           color: AppColors.paraColor,
-            //                           fontSize: 13,
-            //                           fontWeight: FontWeight.w500)),
-            //                 ),
-            //               ],
-            //             ),
-            //           ),
-            //         ],
-            //       ),
-            //     ),
-            //   ],
-            // ),
           )),
         ]),
       ),

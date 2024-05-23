@@ -1,9 +1,10 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:login_signup_project/features/Controller/income_controller.dart';
-import 'package:login_signup_project/features/model/income_model.dart';
+import 'package:login_signup_project/features/Controller/transaction_controller.dart';
+import 'package:login_signup_project/features/model/transaction_model.dart';
 import 'package:login_signup_project/screens_home/NotificationScreen.dart';
 import 'package:login_signup_project/utils/constants/color_constants.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,11 +16,46 @@ import '../features/detail_transaction/detail_transaction.dart';
 import 'TransacsionScreen.dart';
 
 class HomeBody extends StatelessWidget {
-  const HomeBody({super.key});
+  HomeBody({super.key});
+
+  List<String> transactionIds = [];
+
+  // Hàm getDataFromFirebase để lấy dữ liệu từ Firebase
+  Future<void> getDataFromFirebase() async {
+    try {
+      CollectionReference transactionsCollection =
+          FirebaseFirestore.instance.collection('Income');
+
+      QuerySnapshot querySnapshot = await transactionsCollection.get();
+
+      querySnapshot.docs.forEach((DocumentSnapshot document) {
+        String transactionId = document.id;
+        // Thêm transactionId vào danh sách
+        transactionIds.add(transactionId);
+        print('Transaction ID: $transactionId');
+      });
+    } catch (error) {
+      print('Error: $error');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final incomeController = Get.put(IncomeController());
+    getDataFromFirebase();
+
+    var totalIncome = incomeController.allTransaction
+        .where((element) => element.isIncome == true)
+        .map((e) => e.amount)
+        .reduce((value, element) => value! + element!)!;
+
+    print('Total Income: $totalIncome');
+    var totalExpense = incomeController.allTransaction
+        .where((element) => element.isIncome == false)
+        .map((e) => e.amount)
+        .reduce((value, element) => value! + element!)!;
+
+    print('Total Expense: $totalExpense');
 
     return Scaffold(
       // appBar: AppBar(),
@@ -102,11 +138,14 @@ class HomeBody extends StatelessWidget {
                             children: [
                               Text("Income",
                                   style: TextStyle(color: Colors.white)),
-                              Text("\$5000",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.w600)),
+                              //total income
+                              Text(
+                                "\$5000",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w600),
+                              ),
                             ],
                           )
                         ],
@@ -353,90 +392,6 @@ class HomeBody extends StatelessWidget {
                           ),
                     ],
                   ),
-
-                  // GestureDetector(
-                  //   onTap: () {
-                  //     // Điều hướng đến DetailScreen khi nhấn vào phần tử
-                  //     Navigator.push(
-                  //       context,
-                  //       MaterialPageRoute(
-                  //           builder: (context) => DetailTransaction()),
-                  //     );
-                  //   },
-                  //   child: Container(
-                  //     // height: 80,
-                  //     padding: EdgeInsets.all(15),
-                  //     decoration: BoxDecoration(
-                  //         color: Colors.grey[100],
-                  //         borderRadius: BorderRadius.circular(20)),
-                  //     child: Row(
-                  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //       children: [
-                  //         Container(
-                  //           width: 50,
-                  //           height: 50,
-                  //           padding: const EdgeInsets.all(10),
-                  //           decoration: ShapeDecoration(
-                  //             color: Colors.amber,
-                  //             shape: RoundedRectangleBorder(
-                  //               borderRadius: BorderRadius.circular(14),
-                  //             ),
-                  //           ),
-                  //           child: Icon(
-                  //             Icons.shopping_cart_sharp,
-                  //             color: AppColors.iconColor,
-                  //           ),
-                  //         ),
-                  //         SizedBox(
-                  //           width: 15,
-                  //         ),
-                  //         Expanded(
-                  //           child: Column(
-                  //             mainAxisAlignment: MainAxisAlignment.start,
-                  //             crossAxisAlignment: CrossAxisAlignment.start,
-                  //             children: [
-                  //               Text("Shopping",
-                  //                   style: TextStyle(
-                  //                       color: AppColors.mainBlackColor,
-                  //                       fontSize: 16,
-                  //                       fontWeight: FontWeight.w500)),
-                  //               const SizedBox(height: 5),
-                  //               Text("Buy some grocery",
-                  //                   style: TextStyle(
-                  //                       color: AppColors.paraColor,
-                  //                       fontSize: 13,
-                  //                       fontWeight: FontWeight.w500)),
-                  //             ],
-                  //           ),
-                  //         ),
-                  //         SizedBox(
-                  //           width: 10,
-                  //         ),
-                  //         Column(
-                  //           children: [
-                  //             const Text("- \$120",
-                  //                 style: TextStyle(
-                  //                     color: Colors.red,
-                  //                     fontSize: 16,
-                  //                     fontWeight: FontWeight.w600)),
-                  //             const SizedBox(height: 10),
-                  //             Text("10:00 AM",
-                  //                 style: TextStyle(
-                  //                     color: AppColors.paraColor,
-                  //                     fontSize: 13,
-                  //                     fontWeight: FontWeight.w500)),
-                  //           ],
-                  //         )
-                  //       ],
-                  //     ),
-                  //   ),
-                  // ),
-
-                  // const SizedBox(
-                  //   height: 20,
-                  // ),
-
-                  // GestureDetector(
                   //   onTap: () {
                   //     // Điều hướng đến DetailScreen khi nhấn vào phần tử
                   //     Navigator.push(
@@ -518,18 +473,25 @@ class HomeBody extends StatelessWidget {
                         ? ListView.builder(
                             // physics: const NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
-                            itemCount: incomeController.incomeList.length,
+                            //max item is 2
+                            itemCount:
+                                incomeController.allTransaction.length > 2
+                                    ? 2
+                                    : incomeController.allTransaction.length,
                             itemBuilder: (context, index) {
-                              final IncomeModel income =
-                                  incomeController.incomeList[index];
+                              TransactionModel income =
+                                  incomeController.allTransaction[index];
                               return GestureDetector(
                                 onTap: () {
                                   // Điều hướng đến DetailScreen khi nhấn vào phần tử
+                                  // Lấy transactionId từ danh sách đã lưu trữ
+                                  String transactionId = transactionIds[index];
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            DetailTransaction()),
+                                      builder: (context) => DetailTransaction(
+                                          transactionId: transactionId),
+                                    ),
                                   );
                                 },
                                 child: Container(
@@ -554,6 +516,7 @@ class HomeBody extends StatelessWidget {
                                                 BorderRadius.circular(14),
                                           ),
                                         ),
+                                        //atachment image
                                         child: Icon(
                                           Icons.shopping_cart_sharp,
                                           color: AppColors.iconColor,
@@ -591,11 +554,23 @@ class HomeBody extends StatelessWidget {
                                       ),
                                       Column(
                                         children: [
-                                          Text("\$${income.ammount}",
-                                              style: TextStyle(
-                                                  color: Colors.green,
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w600)),
+                                          income.isIncome!
+                                              ? Text(
+                                                  "\$${income.amount}",
+                                                  style: TextStyle(
+                                                      color: Colors.green,
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                )
+                                              : Text(
+                                                  "- \$${income.amount}",
+                                                  style: TextStyle(
+                                                      color: Colors.red,
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                ),
                                           const SizedBox(height: 10),
                                           Text(income.date ?? "",
                                               style: TextStyle(

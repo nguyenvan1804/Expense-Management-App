@@ -391,9 +391,9 @@ class _HomeBodyState extends State<HomeBody> {
                             shrinkWrap: true,
                             //max item is 2
                             itemCount:
-                                incomeController.allTransaction.length > 2
-                                    ? 2
-                                    : incomeController.allTransaction.length,
+                                // incomeController.allTransaction.length > 2
+                                //     ? 2 :
+                                incomeController.allTransaction.length,
                             itemBuilder: (context, index) {
                               TransactionModel income =
                                   incomeController.allTransaction[index];

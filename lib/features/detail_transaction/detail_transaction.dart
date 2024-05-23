@@ -12,6 +12,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../screens_home/home_expense_body.dart';
 import 'package:intl/intl.dart';
+import 'package:get/get.dart';
+import '../Controller/transaction_controller.dart';
+
+
 
 class DetailTransaction extends StatefulWidget {
   final String transactionId;
@@ -193,7 +197,7 @@ class _DetailTransactionState extends State<DetailTransaction> {
                             if (pickedDate != null) {
                               setState(() {
                                 dateController.text =
-                                    DateFormat('yyyy-MM-dd').format(pickedDate);
+                                    DateFormat('dd/MM/yyyy').format(pickedDate);
                               });
                             }
                           },
@@ -294,6 +298,9 @@ class _DetailTransactionState extends State<DetailTransaction> {
           content: Text('Transaction updated successfully'),
         ),
       );
+      Get.find<IncomeController>().fetchIncome();
+  
+      Navigator.pop(context);
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -340,6 +347,9 @@ class _DetailTransactionState extends State<DetailTransaction> {
           ),
         );
         await Future.delayed(Duration(seconds: 1));
+        // Pop the DetailTransaction screen
+        Navigator.pop(context);
+        Get.find<IncomeController>().fetchIncome();
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => HomeBody()),

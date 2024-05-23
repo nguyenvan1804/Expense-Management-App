@@ -300,13 +300,17 @@ class TransacsionScreen extends StatelessWidget {
                                   incomeController.incomeList[index];
                               return GestureDetector(
                                 onTap: () {
-                                  // Điều hướng đến DetailScreen khi nhấn vào phần tử
-                                  // Navigator.push(
-                                  //   context,
-                                  //   MaterialPageRoute(
-                                  //       builder: (context) =>
-                                  //           DetailTransaction()),
-                                  // );
+                                  String transactionId = income.id ?? '';
+                                    if (transactionId != null) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => DetailTransaction(
+                                            transactionId: transactionId,
+                                          ),
+                                        ),
+                                      );
+                                    };
                                 },
                                 child: Container(
                                   margin: const EdgeInsets.only(bottom: 15),
@@ -416,13 +420,17 @@ class TransacsionScreen extends StatelessWidget {
                                   incomeController.expenseList[index];
                               return GestureDetector(
                                 onTap: () {
-                                  // Điều hướng đến DetailScreen khi nhấn vào phần tử
-                                  // Navigator.push(
-                                  //   context,
-                                  //   MaterialPageRoute(
-                                  //       builder: (context) =>
-                                  //           DetailTransaction()),
-                                  // );
+                                  String transactionId = expense.id ?? '';
+                                    if (transactionId != null) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => DetailTransaction(
+                                            transactionId: transactionId,
+                                          ),
+                                        ),
+                                      );
+                                    }
                                 },
                                 child: Container(
                                   margin: const EdgeInsets.only(bottom: 15),

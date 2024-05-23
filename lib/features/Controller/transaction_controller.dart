@@ -74,16 +74,15 @@ class IncomeController extends GetxController {
           maxHeight: 512,
           maxWidth: 512);
       if (image != null) {
-        // imageUploading.value = true;
+        imageUploading.value = true;
         // Upload Image
-        final imageUrl = await _transactionRepository.uploadAttachment(
-            'Users/Images/Profile/', image);
+        final imageUrl = await _transactionRepository.uploadAttachment('Attachmentt/Images', image);
 
-        print('Image Url: $imageUrl');
-        // mappping the attachment
+        // Update User Image Record
         Map<String, dynamic> json = {'attachment': imageUrl};
-        print(json);
-        return json;
+        await _transactionRepository.updateSingleField(json);
+        income.value.attachment = imageUrl;
+        income.refresh();
       }
     } catch (e) {
       TLoaders.errorSnackBar(

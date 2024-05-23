@@ -1,17 +1,23 @@
 // // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
-import 'dart:ffi';
-import 'dart:math';
+import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:login_signup_project/features/model/transaction_model.dart';
+import '../../common/widgets/images/t_circular_images.dart';
 import '../../core/app_routes.dart';
 import '../../utils/constants/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../screens_home/home_expense_body.dart';
 import 'package:intl/intl.dart';
+
+import '../../utils/constants/image_strings.dart';
+import '../../utils/shimmer/shimmer.dart';
+import '../Controller/transaction_controller.dart';
 
 class DetailTransaction extends StatefulWidget {
   final String transactionId;
@@ -26,6 +32,7 @@ class _DetailTransactionState extends State<DetailTransaction> {
   final TextEditingController categoryController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController dateController = TextEditingController();
+  final TextEditingController attachmentController = TextEditingController();
 
   late bool _isIncome = false;
 
@@ -47,6 +54,7 @@ class _DetailTransactionState extends State<DetailTransaction> {
         categoryController.text = data['category'] ?? '';
         descriptionController.text = data['description'] ?? '';
         dateController.text = data['date'] ?? '';
+        attachmentController.text = data['attachment'] ?? '';
         bool isIncome = data['isIncome'] ?? false;
         _updateIsIncome(isIncome);
       }
@@ -54,6 +62,7 @@ class _DetailTransactionState extends State<DetailTransaction> {
       print('Error fetching transaction data: $error');
     }
   }
+
 
   void _updateIsIncome(bool isIncome) {
     if (_isIncome != isIncome) {
@@ -238,8 +247,17 @@ class _DetailTransactionState extends State<DetailTransaction> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Expanded(
-                              child:
-                                  Image.asset('assets/images/attachment.png'),
+                              child: attachmentController.text.isNotEmpty
+                                  ? (Uri.parse(attachmentController.text).isAbsolute
+                                  ? Image.network(
+                                attachmentController.text,
+                                fit: BoxFit.cover,
+                              )
+                                  : Image.file(
+                                File(attachmentController.text),
+                                fit: BoxFit.cover,
+                              ))
+                                  : Image.asset('assets/images/attachment.png'),
                             )
                           ],
                         ),

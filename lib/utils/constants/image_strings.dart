@@ -23,4 +23,6 @@ class TImages {
   //Lotties
   static const String successfullyRegisterAnimation = "assets/lotties/Animation_success.json";
   static const String docerAnimation = "assets/lotties/Animation_docer.json";
+
+  static const String attachment = "assets/images/attachment.png";
 }

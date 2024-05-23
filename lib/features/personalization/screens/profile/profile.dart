@@ -56,7 +56,7 @@ class ProfileScreen extends StatelessWidget {
                 const SizedBox(height: TSizes.spaceBtwItems),
 
                 TProfileMenu(title: 'Name', value: controller.user.value.fullName, onPressed: () => Get.to(() => const ChangeName())),
-                TProfileMenu(title: 'Username', value: controller.user.value.username, onPressed: (){}),
+                TProfileMenu(title: 'Username', value: controller.user.value.username, onPressed: () {  },),
 
                 const SizedBox(height: TSizes.spaceBtwItems),
                 const Divider(),
@@ -66,7 +66,7 @@ class ProfileScreen extends StatelessWidget {
                 const TSectionHeading(title: "Personal Information", showActionButton: false),
                 const SizedBox(height: TSizes.spaceBtwItems),
 
-                TProfileMenu(title: "User ID", value: controller.user.value.id,icon: Iconsax.copy, onPressed: () {}),
+                TProfileMenu(title: "User ID", value: controller.user.value.id, onPressed: () {}),
                 TProfileMenu(title: "E-mail", value: controller.user.value.email, onPressed: () {}),
                 TProfileMenu(title: 'Phone Number', value: controller.user.value.phoneNumber, onPressed: () {}),
                 TProfileMenu(title: "Sender", value: 'Male', onPressed: () {}),

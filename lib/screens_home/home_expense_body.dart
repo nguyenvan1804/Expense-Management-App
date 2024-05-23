@@ -12,7 +12,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get_utils/get_utils.dart';
 
+import '../common/widgets/images/t_circular_images.dart';
 import '../features/detail_transaction/detail_transaction.dart';
+import '../features/personalization/user_controller.dart';
+import '../utils/constants/image_strings.dart';
+import '../utils/shimmer/shimmer.dart';
 import 'TransacsionScreen.dart';
 
 class HomeBody extends StatelessWidget {
@@ -44,18 +48,19 @@ class HomeBody extends StatelessWidget {
     final incomeController = Get.put(IncomeController());
     getDataFromFirebase();
 
-    var totalIncome = incomeController.allTransaction
-        .where((element) => element.isIncome == true)
-        .map((e) => e.amount)
-        .reduce((value, element) => value! + element!)!;
+    // var totalIncome = incomeController.allTransaction
+    //     .where((element) => element.isIncome == true)
+    //     .map((e) => e.amount)
+    //     .reduce((value, element) => value! + element!)!;
 
-    print('Total Income: $totalIncome');
-    var totalExpense = incomeController.allTransaction
-        .where((element) => element.isIncome == false)
-        .map((e) => e.amount)
-        .reduce((value, element) => value! + element!)!;
+    // print('Total Income: $totalIncome');
+    // var totalExpense = incomeController.allTransaction
+    //     .where((element) => element.isIncome == false)
+    //     .map((e) => e.amount)
+    //     .reduce((value, element) => value! + element!)!;
 
-    print('Total Expense: $totalExpense');
+    // print('Total Expense: $totalExpense');
+    final controller = Get.put(UserController());
 
     return Scaffold(
       // appBar: AppBar(),
@@ -69,10 +74,19 @@ class HomeBody extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   //circle avatar
-                  const CircleAvatar(
-                    radius: 20,
-                    backgroundImage: AssetImage('assets/images/avatar.jpg'),
-                  ),
+                  Obx(() {
+                    final networkImage = controller.user.value.profilePicture;
+                    final image =
+                        networkImage.isNotEmpty ? networkImage : TImages.user;
+                    return controller.imageUploading.value
+                        ? const TShimmerEffect(
+                            width: 80, height: 80, radius: 80)
+                        : TCircularImage(
+                            image: image,
+                            width: 65,
+                            height: 65,
+                            isNetworkImage: networkImage.isNotEmpty);
+                  }),
 
                   const Row(
                     children: [

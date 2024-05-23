@@ -40,8 +40,8 @@ class UserModel {
     String lastName = nameParts.length > 1 ? nameParts[1].toLowerCase() : " ";
 
     String camelCaseUsername = "$firstName$lastName"; // Combine first and Last name
-    String usernameWithPrefix = "cwt_$camelCaseUsername"; // Add "cwt_" prefix
-    return usernameWithPrefix;
+    // String usernameWithPrefix = camelCaseUsername; // Add "cwt_" prefix
+    return camelCaseUsername;
   }
 
   /// Static function to create an empty user model.

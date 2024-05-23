@@ -1,8 +1,6 @@
 import 'dart:ffi';
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:image_picker/image_picker.dart';
@@ -20,6 +18,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+import '../common/widgets/images/t_circular_images.dart';
+import '../features/personalization/user_controller.dart';
+import '../utils/constants/image_strings.dart';
+import '../utils/shimmer/shimmer.dart';
+
 class AddInconme extends StatefulWidget {
   const AddInconme({super.key});
 
@@ -28,6 +31,8 @@ class AddInconme extends StatefulWidget {
 }
 
 class _AddInconmeState extends State<AddInconme> {
+  File? _selectedImage;
+
   String selectedItem = 'Income';
   final IncomeController incomeController = Get.put(IncomeController());
 
@@ -79,6 +84,7 @@ class _AddInconmeState extends State<AddInconme> {
 
   @override
   Widget build(BuildContext context) {
+    final controller = UserController.instance;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(

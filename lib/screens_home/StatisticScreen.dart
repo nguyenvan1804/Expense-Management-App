@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:login_signup_project/features/detail_transaction/detail_transaction.dart';
+import 'package:login_signup_project/screens_home/PieChartPage.dart';
 import 'package:login_signup_project/screens_home/bar_chart.dart';
 import 'package:login_signup_project/utils/constants/color_constants.dart';
 import 'package:login_signup_project/utils/constants/colors.dart';
@@ -147,7 +148,7 @@ class _StatisticScreenState extends State<StatisticScreen> {
                       width: MediaQuery.of(context).size.width,
                       height: 300,
                       // color: Colors.red,
-                      // child: PieChartPage(),
+                      child: PieChartPage(),
                     ),
                   )
                 : Padding(

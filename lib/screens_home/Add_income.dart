@@ -35,12 +35,13 @@ class _AddInconmeState extends State<AddInconme> {
 
   String selectedItem = 'Income';
   final IncomeController incomeController = Get.put(IncomeController());
+  final UserController _userController = UserController.instance;
 
   TextEditingController amountController = TextEditingController();
   TextEditingController categoryController = TextEditingController();
   TextEditingController dateController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
-
+  
   int amount = 0;
   String category = '';
   String date = '';
@@ -428,6 +429,16 @@ class _AddInconmeState extends State<AddInconme> {
                     const SizedBox(height: 50),
                     ElevatedButton(
                       onPressed: () {
+                        final userId = _userController.user.value.id;
+                        // Kiểm tra xem có ID của người dùng hay không trước khi lưu giao dịch
+                        if (userId.isNotEmpty) {
+                          //map dữ liệu vào model giao dịch
+                          if (selectedItem == 'Income') {
+                            isIncome = true;
+                          } else {
+                            isIncome = false;
+                          }
+                        }
                         //map the data to the model
                         if (selectedItem == 'Income') {
                           isIncome = true;
@@ -435,6 +446,7 @@ class _AddInconmeState extends State<AddInconme> {
                           isIncome = false;
                         }
                         final income = TransactionModel(
+                          userId: userId,
                           amount: amount,
                           category: category ?? '',
                           date: date ?? '',

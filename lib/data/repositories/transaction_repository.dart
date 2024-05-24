@@ -18,9 +18,9 @@ class TransactionRepository extends GetxController {
   final _db = FirebaseFirestore.instance;
 
   //get all income
-  Future<List<TransactionModel>> getAllIncome() async {
+  Future<List<TransactionModel>> getAllIncome(String userId) async {
     try {
-      final snapshot = await _db.collection('Income').get();
+      final snapshot = await _db.collection('Income').where('userId', isEqualTo: userId).get();
       final list = snapshot.docs
           .map((doc) => TransactionModel.fromSnapshot(doc))
           .toList();

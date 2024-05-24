@@ -33,6 +33,7 @@ class _HomeBodyState extends State<HomeBody> {
   @override
   Widget build(BuildContext context) {
     final incomeController = Get.put(IncomeController());
+    final userController = Get.put(UserController());
 
     // var totalIncome = incomeController.allTransaction
     //     .where((element) => element.isIncome == true)
@@ -385,6 +386,10 @@ class _HomeBodyState extends State<HomeBody> {
                     ],
                   ),
                   Obx(() {
+                    final userId = userController.user.value.id;
+                    if (userId.isEmpty) {
+                      return const SizedBox(); // Return empty widget if user ID is empty
+                    } else {
                     return incomeController.isLoading.value == false
                         ? ListView.builder(
                             // physics: const NeverScrollableScrollPhysics(),
@@ -504,6 +509,7 @@ class _HomeBodyState extends State<HomeBody> {
                             },
                           )
                         : const Center(child: CircularProgressIndicator());
+                    }
                   }),
                 ],
               ),

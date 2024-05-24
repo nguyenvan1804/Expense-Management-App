@@ -13,6 +13,11 @@ class IncomeController extends GetxController {
   final isLoading = false.obs;
   final imageUploading = false.obs;
 
+  int incomeAmount = 0;
+  int expenseAmount = 0;
+
+  int totalIncomePerMonth = 0;
+
   String attachment = '';
 
   final _transactionRepository = Get.put(TransactionRepository());
@@ -26,6 +31,7 @@ class IncomeController extends GetxController {
   void onInit() {
     // TODO: implement onInit
     fetchIncome();
+    // calculateTotalIncomePerMonth();
     super.onInit();
   }
 
@@ -40,16 +46,25 @@ class IncomeController extends GetxController {
       final alltrasaction = await _transactionRepository.getAllIncome(userId);
 
       //query all transaction in time created order
+      print(alltrasaction);
       allTransaction.assignAll(alltrasaction);
+
       //update the income list
       incomeList.assignAll(alltrasaction
           .where((transaction) => transaction.isIncome == true)
           .toList());
 
+      incomeList.forEach((element) {
+        incomeAmount += element.amount!;
+      });
       // filter the expense list
       expenseList.assignAll(alltrasaction
           .where((transaction) => transaction.isIncome == false)
           .toList());
+
+      expenseList.forEach((element) {
+        expenseAmount += element.amount!;
+      });
     } catch (e) {
       TLoaders.errorSnackBar(title: 'Error', message: e.toString());
     } finally {
@@ -81,7 +96,8 @@ class IncomeController extends GetxController {
       if (image != null) {
         imageUploading.value = true;
         // Upload Image
-        final imageUrl = await _transactionRepository.uploadAttachment('Attachmentt/Images', image);
+        final imageUrl = await _transactionRepository.uploadAttachment(
+            'Attachmentt/Images', image);
 
         // Update User Image Record
         Map<String, dynamic> json = {'attachment': imageUrl};
@@ -95,6 +111,22 @@ class IncomeController extends GetxController {
     } finally {
       imageUploading.value = false;
     }
+  }
+
+  // calculate total income per month
+  int calculateTotalIncomePerMonth() {
+    final now = DateTime.now();
+
+    //get all the month in income["date"]
+    List incomeDate = incomeList.map((e) => e.date).toList();
+
+    for (int i = 0; i < incomeDate.length; i++) {
+      if (int.parse(incomeDate[i].split('/')[1]) == now.month) {
+        totalIncomePerMonth += incomeList[i].amount!;
+      }
+    }
+    print(totalIncomePerMonth);
+    return totalIncomePerMonth;
   }
 
   //fliter income

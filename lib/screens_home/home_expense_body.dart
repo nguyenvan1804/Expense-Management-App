@@ -6,6 +6,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:login_signup_project/features/Controller/transaction_controller.dart';
 import 'package:login_signup_project/features/model/transaction_model.dart';
 import 'package:login_signup_project/screens_home/NotificationScreen.dart';
+import 'package:login_signup_project/screens_home/bar_chart.dart';
 import 'package:login_signup_project/utils/constants/color_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -27,27 +28,10 @@ class HomeBody extends StatefulWidget {
 }
 
 class _HomeBodyState extends State<HomeBody> {
-
-
-
   @override
   Widget build(BuildContext context) {
     final incomeController = Get.put(IncomeController());
     final userController = Get.put(UserController());
-
-    // var totalIncome = incomeController.allTransaction
-    //     .where((element) => element.isIncome == true)
-    //     .map((e) => e.amount)
-    //     .reduce((value, element) => value! + element!)!;
-
-    // print('Total Income: $totalIncome');
-    // var totalExpense = incomeController.allTransaction
-    //     .where((element) => element.isIncome == false)
-    //     .map((e) => e.amount)
-    //     .reduce((value, element) => value! + element!)!;
-
-    // print('Total Expense: $totalExpense');
-    final controller = Get.put(UserController());
 
     return Scaffold(
       // appBar: AppBar(),
@@ -62,10 +46,11 @@ class _HomeBodyState extends State<HomeBody> {
                 children: [
                   //circle avatar
                   Obx(() {
-                    final networkImage = controller.user.value.profilePicture;
+                    final networkImage =
+                        userController.user.value.profilePicture;
                     final image =
                         networkImage.isNotEmpty ? networkImage : TImages.user;
-                    return controller.imageUploading.value
+                    return userController.imageUploading.value
                         ? const TShimmerEffect(
                             width: 80, height: 80, radius: 80)
                         : TCircularImage(
@@ -103,10 +88,11 @@ class _HomeBodyState extends State<HomeBody> {
               const SizedBox(
                 height: 10,
               ),
-              const SizedBox(
+              SizedBox(
                 height: 50,
                 child: Text(
-                  '\$9400',
+                  // '\$9400',
+                  '\$${incomeController.incomeAmount - incomeController.expenseAmount}',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Color(0xFF161719),
@@ -129,7 +115,7 @@ class _HomeBodyState extends State<HomeBody> {
                       decoration: BoxDecoration(
                           color: const Color.fromARGB(255, 8, 123, 68),
                           borderRadius: BorderRadius.circular(20)),
-                      child: const Row(
+                      child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Icon(CupertinoIcons.add_circled,
@@ -141,7 +127,8 @@ class _HomeBodyState extends State<HomeBody> {
                                   style: TextStyle(color: Colors.white)),
                               //total income
                               Text(
-                                "\$5000",
+                                // "\$5000",
+                                "\$${incomeController.incomeAmount}",
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 22,
@@ -163,7 +150,7 @@ class _HomeBodyState extends State<HomeBody> {
                       decoration: BoxDecoration(
                           color: Colors.redAccent,
                           borderRadius: BorderRadius.circular(20)),
-                      child: const Row(
+                      child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Icon(CupertinoIcons.minus_circle,
@@ -173,7 +160,9 @@ class _HomeBodyState extends State<HomeBody> {
                             children: [
                               Text("Expenses",
                                   style: TextStyle(color: Colors.white)),
-                              Text("\$1200",
+                              Text(
+                                  // "\$1200",
+                                  "\$${incomeController.expenseAmount}",
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 22,
@@ -204,9 +193,18 @@ class _HomeBodyState extends State<HomeBody> {
                 height: 20,
               ),
               //image chart
-              Image.asset('assets/images/chart.png',
-                  height: 200, width: double.maxFinite),
-
+              // Image.asset('assets/images/chart.png',
+              //     height: 200, width: double.maxFinite),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 25.0, vertical: 10.0),
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 200,
+                  // color: Colors.red,
+                  child: const MyChart(),
+                ),
+              ),
               const SizedBox(
                 height: 10,
               ),
@@ -381,8 +379,7 @@ class _HomeBodyState extends State<HomeBody> {
                                 fontSize: 14,
                               ),
                             ),
-                          )
-                          ),
+                          )),
                     ],
                   ),
                   Obx(() {
@@ -390,80 +387,115 @@ class _HomeBodyState extends State<HomeBody> {
                     if (userId.isEmpty) {
                       return const SizedBox(); // Return empty widget if user ID is empty
                     } else {
-                    return incomeController.isLoading.value == false
-                        ? ListView.builder(
-                            // physics: const NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            //max item is 2
-                            itemCount:
-                                // incomeController.allTransaction.length > 2
-                                //     ? 2 :
-                                incomeController.allTransaction.length,
-                            itemBuilder: (context, index) {
-                              TransactionModel income =
-                                  incomeController.allTransaction[index];
-                              return GestureDetector(
-                                onTap: () {
-                                  // Điều hướng đến DetailScreen khi nhấn vào phần tử
-                                  String transactionId = income.id ?? '';
-                                  if (transactionId != null) {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => DetailTransaction(
-                                          transactionId: transactionId,
-                                        ),
-                                      ),
-                                    );
-                                  } 
-                                },
-                                child: Container(
-                                  margin: const EdgeInsets.only(bottom: 15),
-                                  // height: 80,
-                                  padding: EdgeInsets.all(15),
-                                  decoration: BoxDecoration(
-                                      color: Colors.grey[100],
-                                      borderRadius: BorderRadius.circular(20)),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Container(
-                                        width: 50,
-                                        height: 50,
-                                        padding: const EdgeInsets.all(10),
-                                        decoration: ShapeDecoration(
-                                          color: Colors.amber,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(14),
+                      return incomeController.isLoading.value == false
+                          ? ListView.builder(
+                              // physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              //max item is 2
+                              itemCount:
+                                  // incomeController.allTransaction.length > 2
+                                  //     ? 2 :
+                                  incomeController.allTransaction.length,
+                              itemBuilder: (context, index) {
+                                TransactionModel income =
+                                    incomeController.allTransaction[index];
+                                return GestureDetector(
+                                  onTap: () {
+                                    // Điều hướng đến DetailScreen khi nhấn vào phần tử
+                                    String transactionId = income.id ?? '';
+                                    if (transactionId != null) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              DetailTransaction(
+                                            transactionId: transactionId,
                                           ),
                                         ),
-                                        //atachment image
-                                        child: Icon(
-                                          Icons.shopping_cart_sharp,
-                                          color: AppColors.iconColor,
+                                      );
+                                    }
+                                  },
+                                  child: Container(
+                                    margin: const EdgeInsets.only(bottom: 15),
+                                    // height: 80,
+                                    padding: EdgeInsets.all(15),
+                                    decoration: BoxDecoration(
+                                        color: Colors.grey[100],
+                                        borderRadius:
+                                            BorderRadius.circular(20)),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Container(
+                                          width: 50,
+                                          height: 50,
+                                          padding: const EdgeInsets.all(10),
+                                          decoration: ShapeDecoration(
+                                            color: Colors.amber,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(14),
+                                            ),
+                                          ),
+                                          //atachment image
+                                          child: Icon(
+                                            Icons.shopping_cart_sharp,
+                                            color: AppColors.iconColor,
+                                          ),
                                         ),
-                                      ),
-                                      SizedBox(
-                                        width: 15,
-                                      ),
-                                      Expanded(
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                        SizedBox(
+                                          width: 15,
+                                        ),
+                                        Expanded(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(income.category ?? "",
+                                                  style: TextStyle(
+                                                      color: AppColors
+                                                          .mainBlackColor,
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w500)),
+                                              const SizedBox(height: 5),
+                                              Text(income.description ?? "",
+                                                  style: TextStyle(
+                                                      color:
+                                                          AppColors.paraColor,
+                                                      fontSize: 13,
+                                                      fontWeight:
+                                                          FontWeight.w500)),
+                                            ],
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        Column(
                                           children: [
-                                            Text(income.category ?? "",
-                                                style: TextStyle(
-                                                    color: AppColors
-                                                        .mainBlackColor,
-                                                    fontSize: 16,
-                                                    fontWeight:
-                                                        FontWeight.w500)),
-                                            const SizedBox(height: 5),
-                                            Text(income.description ?? "",
+                                            income.isIncome!
+                                                ? Text(
+                                                    "\$${income.amount}",
+                                                    style: TextStyle(
+                                                        color: Colors.green,
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w600),
+                                                  )
+                                                : Text(
+                                                    "- \$${income.amount}",
+                                                    style: TextStyle(
+                                                        color: Colors.red,
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w600),
+                                                  ),
+                                            const SizedBox(height: 10),
+                                            Text(income.date ?? "",
                                                 style: TextStyle(
                                                     color: AppColors.paraColor,
                                                     fontSize: 13,
@@ -471,44 +503,13 @@ class _HomeBodyState extends State<HomeBody> {
                                                         FontWeight.w500)),
                                           ],
                                         ),
-                                      ),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      Column(
-                                        children: [
-                                          income.isIncome!
-                                              ? Text(
-                                                  "\$${income.amount}",
-                                                  style: TextStyle(
-                                                      color: Colors.green,
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.w600),
-                                                )
-                                              : Text(
-                                                  "- \$${income.amount}",
-                                                  style: TextStyle(
-                                                      color: Colors.red,
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.w600),
-                                                ),
-                                          const SizedBox(height: 10),
-                                          Text(income.date ?? "",
-                                              style: TextStyle(
-                                                  color: AppColors.paraColor,
-                                                  fontSize: 13,
-                                                  fontWeight: FontWeight.w500)),
-                                        ],
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              );
-                            },
-                          )
-                        : const Center(child: CircularProgressIndicator());
+                                );
+                              },
+                            )
+                          : const Center(child: CircularProgressIndicator());
                     }
                   }),
                 ],

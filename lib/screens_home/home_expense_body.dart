@@ -198,19 +198,6 @@ class _HomeBodyState extends State<HomeBody> {
                     horizontal: 25.0, vertical: 10.0),
                 child: Container(
                   width: MediaQuery.of(context).size.width,
-                  height: 300,
-                  // color: Colors.red,
-                  child: const MyChart(),
-                ),
-              ),
-              //image chart
-              // Image.asset('assets/images/chart.png',
-              //     height: 200, width: double.maxFinite),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 25.0, vertical: 10.0),
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
                   height: 200,
                   // color: Colors.red,
                   child: const MyChart(),

@@ -6,6 +6,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:login_signup_project/features/Controller/transaction_controller.dart';
 import 'package:login_signup_project/features/model/transaction_model.dart';
 import 'package:login_signup_project/screens_home/NotificationScreen.dart';
+import 'package:login_signup_project/screens_home/bar_chart.dart';
 import 'package:login_signup_project/utils/constants/color_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -216,9 +217,19 @@ class HomeBody extends StatelessWidget {
               const SizedBox(
                 height: 20,
               ),
+              Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 25.0, vertical: 10.0),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 300,
+                      // color: Colors.red,
+                      child: const MyChart(),
+                    ),
+                  ),
               //image chart
-              Image.asset('assets/images/chart.png',
-                  height: 200, width: double.maxFinite),
+              /*Image.asset('assets/images/chart.png',
+                  height: 200, width: double.maxFinite),*/
 
               const SizedBox(
                 height: 10,

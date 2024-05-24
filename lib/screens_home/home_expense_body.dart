@@ -20,34 +20,21 @@ import '../utils/constants/image_strings.dart';
 import '../utils/shimmer/shimmer.dart';
 import 'TransacsionScreen.dart';
 
-class HomeBody extends StatelessWidget {
+class HomeBody extends StatefulWidget {
   HomeBody({super.key});
 
-  List<String> transactionIds = [];
+  @override
+  _HomeBodyState createState() => _HomeBodyState();
+}
 
-  // Hàm getDataFromFirebase để lấy dữ liệu từ Firebase
-  Future<void> getDataFromFirebase() async {
-    try {
-      CollectionReference transactionsCollection =
-          FirebaseFirestore.instance.collection('Income');
+class _HomeBodyState extends State<HomeBody> {
 
-      QuerySnapshot querySnapshot = await transactionsCollection.get();
 
-      querySnapshot.docs.forEach((DocumentSnapshot document) {
-        String transactionId = document.id;
-        // Thêm transactionId vào danh sách
-        transactionIds.add(transactionId);
-        print('Transaction ID: $transactionId');
-      });
-    } catch (error) {
-      print('Error: $error');
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     final incomeController = Get.put(IncomeController());
-    getDataFromFirebase();
+    final userController = Get.put(UserController());
 
     // var totalIncome = incomeController.allTransaction
     //     .where((element) => element.isIncome == true)
@@ -406,118 +393,40 @@ class HomeBody extends StatelessWidget {
                               ),
                             ),
                           )
-
-                          // Container(
-                          //   decoration: BoxDecoration(
-                          //       color: Colors.purpleAccent.withOpacity(0.3),
-                          //       borderRadius: BorderRadius.circular(20)),
-                          //   child: Text("See all",
-                          //       style: TextStyle(color: AppColors.violetColor)),
-                          // ),
                           ),
                     ],
                   ),
-                  //   onTap: () {
-                  //     // Điều hướng đến DetailScreen khi nhấn vào phần tử
-                  //     Navigator.push(
-                  //       context,
-                  //       MaterialPageRoute(
-                  //           builder: (context) => DetailTransaction()),
-                  //     );
-                  //   },
-                  //   child: Container(
-                  //     padding: EdgeInsets.all(15),
-                  //     decoration: BoxDecoration(
-                  //         color: Colors.grey[100],
-                  //         borderRadius: BorderRadius.circular(20)),
-                  //     child: Row(
-                  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //       children: [
-                  //         Container(
-                  //           width: 50,
-                  //           height: 50,
-                  //           padding: const EdgeInsets.all(10),
-                  //           decoration: ShapeDecoration(
-                  //             color: const Color.fromARGB(255, 169, 182, 241),
-                  //             shape: RoundedRectangleBorder(
-                  //               borderRadius: BorderRadius.circular(10),
-                  //             ),
-                  //           ),
-                  //           child: Icon(
-                  //             Icons.edit_note_rounded,
-                  //             color: AppColors.iconColor,
-                  //           ),
-                  //         ),
-                  //         const SizedBox(
-                  //           width: 15,
-                  //         ),
-                  //         Expanded(
-                  //           child: Column(
-                  //             mainAxisAlignment: MainAxisAlignment.start,
-                  //             crossAxisAlignment: CrossAxisAlignment.start,
-                  //             children: [
-                  //               Text("Subscription",
-                  //                   style: TextStyle(
-                  //                       color: AppColors.mainBlackColor,
-                  //                       fontSize: 16,
-                  //                       fontWeight: FontWeight.w500)),
-                  //               const SizedBox(height: 5),
-                  //               Text("Disney+ Annual...",
-                  //                   style: TextStyle(
-                  //                       color: AppColors.paraColor,
-                  //                       fontSize: 13,
-                  //                       fontWeight: FontWeight.w500)),
-                  //             ],
-                  //           ),
-                  //         ),
-                  //         const SizedBox(
-                  //           width: 10,
-                  //         ),
-                  //         Column(
-                  //           crossAxisAlignment: CrossAxisAlignment.end,
-                  //           children: [
-                  //             const Text("- \$80",
-                  //                 style: TextStyle(
-                  //                     color: Colors.red,
-                  //                     fontSize: 16,
-                  //                     fontWeight: FontWeight.w600)),
-                  //             const SizedBox(height: 10),
-                  //             Text("03:30 PM",
-                  //                 style: TextStyle(
-                  //                     color: AppColors.paraColor,
-                  //                     fontSize: 13,
-                  //                     fontWeight: FontWeight.w500)),
-                  //           ],
-                  //         )
-                  //       ],
-                  //     ),
-                  //   ),
-                  // ),
                   Obx(() {
+                    final userId = userController.user.value.id;
+                    if (userId.isEmpty) {
+                      return const SizedBox(); // Return empty widget if user ID is empty
+                    } else {
                     return incomeController.isLoading.value == false
                         ? ListView.builder(
                             // physics: const NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
                             //max item is 2
                             itemCount:
-                                incomeController.allTransaction.length > 2
-                                    ? 2
-                                    : incomeController.allTransaction.length,
+                                // incomeController.allTransaction.length > 2
+                                //     ? 2 :
+                                incomeController.allTransaction.length,
                             itemBuilder: (context, index) {
                               TransactionModel income =
                                   incomeController.allTransaction[index];
                               return GestureDetector(
                                 onTap: () {
                                   // Điều hướng đến DetailScreen khi nhấn vào phần tử
-                                  // Lấy transactionId từ danh sách đã lưu trữ
-                                  String transactionId = transactionIds[index];
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => DetailTransaction(
-                                          transactionId: transactionId),
-                                    ),
-                                  );
+                                  String transactionId = income.id ?? '';
+                                  if (transactionId != null) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => DetailTransaction(
+                                          transactionId: transactionId,
+                                        ),
+                                      ),
+                                    );
+                                  } 
                                 },
                                 child: Container(
                                   margin: const EdgeInsets.only(bottom: 15),
@@ -611,6 +520,7 @@ class HomeBody extends StatelessWidget {
                             },
                           )
                         : const Center(child: CircularProgressIndicator());
+                    }
                   }),
                 ],
               ),

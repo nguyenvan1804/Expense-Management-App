@@ -10,6 +10,7 @@ import 'package:login_signup_project/utils/exceptions/platform_exception.dart';
 import '../../features/model/transaction_model.dart';
 import '../../utils/exceptions/firebase_exception.dart';
 import '../../utils/exceptions/format_exception.dart';
+import 'authentication_repository.dart';
 
 class TransactionRepository extends GetxController {
   static TransactionRepository get instance => Get.find();
@@ -17,9 +18,9 @@ class TransactionRepository extends GetxController {
   final _db = FirebaseFirestore.instance;
 
   //get all income
-  Future<List<TransactionModel>> getAllIncome() async {
+  Future<List<TransactionModel>> getAllIncome(String userId) async {
     try {
-      final snapshot = await _db.collection('Income').get();
+      final snapshot = await _db.collection('Income').where('userId', isEqualTo: userId).get();
       final list = snapshot.docs
           .map((doc) => TransactionModel.fromSnapshot(doc))
           .toList();
@@ -71,6 +72,24 @@ class TransactionRepository extends GetxController {
   Future<void> deleteIncome(String id) async {
     try {
       await _db.collection('Income').doc(id).delete();
+    } on FirebaseException catch (e) {
+      throw TFirebaseException(e.code).message;
+    } on FormatException catch (_) {
+      throw const TFormatException();
+    } on PlatformException catch (e) {
+      throw TPlatformException(e.code).message;
+    } catch (e) {
+      throw 'Something went wrong. Please try again';
+    }
+  }
+
+  /// Update any field in specific Income Collection
+  Future<void> updateSingleField(Map<String, dynamic> json) async {
+    try {
+      await _db
+          .collection("Income")
+          .doc(AuthenticationRepository.instance.authUser?.uid)
+          .update(json);
     } on FirebaseException catch (e) {
       throw TFirebaseException(e.code).message;
     } on FormatException catch (_) {

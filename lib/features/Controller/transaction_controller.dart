@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:login_signup_project/data/repositories/transaction_repository.dart';
 import 'package:login_signup_project/features/model/transaction_model.dart';
 import 'package:login_signup_project/utils/popups/loaders.dart';
+import 'package:login_signup_project/features/personalization/user_controller.dart';
 
 class IncomeController extends GetxController {
   static IncomeController get instance => Get.find();
@@ -32,7 +33,11 @@ class IncomeController extends GetxController {
     try {
       isLoading.value = true;
 
-      final alltrasaction = await _transactionRepository.getAllIncome();
+      // final alltrasaction = await _transactionRepository.getAllIncome();
+      final userController = Get.find<UserController>();
+      final userId = userController.user.value.id;
+
+      final alltrasaction = await _transactionRepository.getAllIncome(userId);
 
       //query all transaction in time created order
       allTransaction.assignAll(alltrasaction);
@@ -74,16 +79,15 @@ class IncomeController extends GetxController {
           maxHeight: 512,
           maxWidth: 512);
       if (image != null) {
-        // imageUploading.value = true;
+        imageUploading.value = true;
         // Upload Image
-        final imageUrl = await _transactionRepository.uploadAttachment(
-            'Users/Images/Profile/', image);
+        final imageUrl = await _transactionRepository.uploadAttachment('Attachmentt/Images', image);
 
-        print('Image Url: $imageUrl');
-        // mappping the attachment
+        // Update User Image Record
         Map<String, dynamic> json = {'attachment': imageUrl};
-        print(json);
-        return json;
+        await _transactionRepository.updateSingleField(json);
+        income.value.attachment = imageUrl;
+        income.refresh();
       }
     } catch (e) {
       TLoaders.errorSnackBar(

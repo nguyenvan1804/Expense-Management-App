@@ -20,7 +20,10 @@ class TransactionRepository extends GetxController {
   //get all income
   Future<List<TransactionModel>> getAllIncome(String userId) async {
     try {
-      final snapshot = await _db.collection('Income').where('userId', isEqualTo: userId).get();
+      final snapshot = await _db
+          .collection('Income')
+          .where('userId', isEqualTo: userId)
+          .get();
       final list = snapshot.docs
           .map((doc) => TransactionModel.fromSnapshot(doc))
           .toList();

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:login_signup_project/data/repositories/authentication_repository.dart';
 import 'package:login_signup_project/data/repositories/transaction_repository.dart';
 import 'package:login_signup_project/features/model/transaction_model.dart';
 import 'package:login_signup_project/utils/popups/loaders.dart';
@@ -13,8 +14,8 @@ class IncomeController extends GetxController {
   final isLoading = false.obs;
   final imageUploading = false.obs;
 
-  int incomeAmount = 0;
-  int expenseAmount = 0;
+  // int incomeAmount = 0;
+  // int expenseAmount = 0;
 
   int totalIncomePerMonth = 0;
 
@@ -26,12 +27,13 @@ class IncomeController extends GetxController {
   RxList<TransactionModel> incomeList = <TransactionModel>[].obs;
   RxList<TransactionModel> expenseList = <TransactionModel>[].obs;
   Rx<TransactionModel> income = TransactionModel.empty().obs;
+  // final userController = Get.find<UserController>();
+  // final userController = Get.put(UserController());
 
   @override
   void onInit() {
     // TODO: implement onInit
     fetchIncome();
-    // calculateTotalIncomePerMonth();
     super.onInit();
   }
 
@@ -40,11 +42,12 @@ class IncomeController extends GetxController {
       isLoading.value = true;
 
       // final alltrasaction = await _transactionRepository.getAllIncome();
-      final userController = Get.find<UserController>();
-      final userId = userController.user.value.id;
 
-      final alltrasaction = await _transactionRepository.getAllIncome(userId);
+      final userId = AuthenticationRepository.instance.authUser?.uid;
+      print('User ID: $userId');
 
+      final alltrasaction = await _transactionRepository.getAllIncome(userId!);
+      // [ ]
       //query all transaction in time created order
       print(alltrasaction);
       allTransaction.assignAll(alltrasaction);
@@ -54,17 +57,17 @@ class IncomeController extends GetxController {
           .where((transaction) => transaction.isIncome == true)
           .toList());
 
-      incomeList.forEach((element) {
-        incomeAmount += element.amount!;
-      });
+      // incomeList.forEach((element) {
+      //   incomeAmount += element.amount!;
+      // });
       // filter the expense list
       expenseList.assignAll(alltrasaction
           .where((transaction) => transaction.isIncome == false)
           .toList());
 
-      expenseList.forEach((element) {
-        expenseAmount += element.amount!;
-      });
+      // expenseList.forEach((element) {
+      //   expenseAmount += element.amount!;
+      // });
     } catch (e) {
       TLoaders.errorSnackBar(title: 'Error', message: e.toString());
     } finally {

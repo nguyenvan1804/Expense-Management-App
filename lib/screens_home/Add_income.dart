@@ -32,7 +32,6 @@ class AddInconme extends StatefulWidget {
 }
 
 class _AddInconmeState extends State<AddInconme> {
-
   String selectedItem = 'Income';
   final IncomeController incomeController = Get.put(IncomeController());
   final UserController _userController = UserController.instance;
@@ -41,7 +40,7 @@ class _AddInconmeState extends State<AddInconme> {
   TextEditingController categoryController = TextEditingController();
   TextEditingController dateController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
-  
+
   int amount = 0;
   String category = '';
   String date = '';
@@ -78,14 +77,14 @@ class _AddInconmeState extends State<AddInconme> {
         setState(() {
           attachment = File(pickedFile.path);
         });
-        final imageUrl = await transactionRepository.uploadAttachment('Attachmentt/Images', pickedFile);
+        final imageUrl = await transactionRepository.uploadAttachment(
+            'Attachmentt/Images', pickedFile);
 
         // Update User Image Record
         Map<String, dynamic> json = {'attachment': imageUrl};
         await transactionRepository.updateSingleField(json);
         transaction.value.attachment = imageUrl;
         transaction.refresh();
-
       } else {
         print("Invalid image path: ${pickedFile.path}");
       }
@@ -207,7 +206,7 @@ class _AddInconmeState extends State<AddInconme> {
                           // Add any additional TextField properties as needed
                           onChanged: (value) {
                             setState(() {
-                              amount = int.parse(value);
+                              amount = int.parse(amountController.text);
                             });
                           },
                         ),
@@ -415,16 +414,17 @@ class _AddInconmeState extends State<AddInconme> {
                       ),
                     ),
                     attachment != null
-                      ? Container(
-                        constraints: const BoxConstraints(
-                          maxWidth: 500.0, // Đặt giới hạn chiều rộng tối đa
-                          maxHeight: 500.0, // Đặt giới hạn chiều cao tối đa
-                        ),
-                        child: Image.file(
-                          attachment!,
-                          fit: BoxFit.contain, // Điều chỉnh hình ảnh để nằm gọn trong Container
-                        ),
-                      )
+                        ? Container(
+                            constraints: const BoxConstraints(
+                              maxWidth: 500.0, // Đặt giới hạn chiều rộng tối đa
+                              maxHeight: 500.0, // Đặt giới hạn chiều cao tối đa
+                            ),
+                            child: Image.file(
+                              attachment!,
+                              fit: BoxFit
+                                  .contain, // Điều chỉnh hình ảnh để nằm gọn trong Container
+                            ),
+                          )
                         : const Text('Please select bill image'),
                     const SizedBox(height: 50),
                     ElevatedButton(
@@ -440,11 +440,11 @@ class _AddInconmeState extends State<AddInconme> {
                           }
                         }
                         //map the data to the model
-                        if (selectedItem == 'Income') {
-                          isIncome = true;
-                        } else {
-                          isIncome = false;
-                        }
+                        // if (selectedItem == 'Income') {
+                        //   isIncome = true;
+                        // } else {
+                        //   isIncome = false;
+                        // }
                         final income = TransactionModel(
                           userId: userId,
                           amount: amount,

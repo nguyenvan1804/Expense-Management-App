@@ -65,7 +65,6 @@ class _DetailTransactionState extends State<DetailTransaction> {
     }
   }
 
-
   void _updateIsIncome(bool isIncome) {
     if (_isIncome != isIncome) {
       setState(() {
@@ -250,15 +249,16 @@ class _DetailTransactionState extends State<DetailTransaction> {
                           children: [
                             Expanded(
                               child: attachmentController.text.isNotEmpty
-                                  ? (Uri.parse(attachmentController.text).isAbsolute
-                                  ? Image.network(
-                                attachmentController.text,
-                                fit: BoxFit.cover,
-                              )
-                                  : Image.file(
-                                File(attachmentController.text),
-                                fit: BoxFit.cover,
-                              ))
+                                  ? (Uri.parse(attachmentController.text)
+                                          .isAbsolute
+                                      ? Image.network(
+                                          attachmentController.text,
+                                          fit: BoxFit.cover,
+                                        )
+                                      : Image.file(
+                                          File(attachmentController.text),
+                                          fit: BoxFit.cover,
+                                        ))
                                   : Image.asset('assets/images/attachment.png'),
                             )
                           ],
@@ -315,7 +315,7 @@ class _DetailTransactionState extends State<DetailTransaction> {
         ),
       );
       Get.find<IncomeController>().fetchIncome();
-  
+
       Navigator.pop(context);
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(

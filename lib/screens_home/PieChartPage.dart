@@ -58,7 +58,7 @@ class _PieChartPageState extends State<PieChartPage> {
             children: <Widget>[
               Indicator(
                 color: AppColors.contentColorBlue,
-                text: 'First',
+                text: 'Today',
                 isSquare: true,
               ),
               SizedBox(
@@ -66,7 +66,7 @@ class _PieChartPageState extends State<PieChartPage> {
               ),
               Indicator(
                 color: AppColors.contentColorYellow,
-                text: 'Second',
+                text: 'Yesterday',
                 isSquare: true,
               ),
               SizedBox(
@@ -74,7 +74,7 @@ class _PieChartPageState extends State<PieChartPage> {
               ),
               Indicator(
                 color: AppColors.contentColorPurple,
-                text: 'Third',
+                text: 'Tomorrow',
                 isSquare: true,
               ),
               SizedBox(
@@ -82,7 +82,7 @@ class _PieChartPageState extends State<PieChartPage> {
               ),
               Indicator(
                 color: AppColors.contentColorGreen,
-                text: 'Fourth',
+                text: 'Weekend',
                 isSquare: true,
               ),
               SizedBox(
